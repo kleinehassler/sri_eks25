@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<autorizacion>
+<estado>AUTORIZADO</estado>
+<numeroAutorizacion>0810202501079184325100120020100000051000000510010</numeroAutorizacion>
+<fechaAutorizacion>2025-10-08T13:08:22-05:00</fechaAutorizacion>
+<ambiente>PRODUCCIÓN</ambiente>
+<comprobante><![CDATA[<?xml version='1.0' encoding='UTF-8'?>
+<factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>IMPORTADORA GUERRERO PERALVO IMGUEP CIA.LTDA.</razonSocial><nombreComercial>IMPORTADORA GUERRERO PERALVO IMGUEP CIA.LTDA.</nombreComercial><ruc>0791843251001</ruc><claveAcceso>0810202501079184325100120020100000051000000510010</claveAcceso><codDoc>01</codDoc><estab>002</estab><ptoEmi>010</ptoEmi><secuencial>000005100</secuencial><dirMatriz>10 DE AGOSTO SN E/MANUEL SERRANO Y MANUEL ESTOMBA</dirMatriz><agenteRetencion>10</agenteRetencion></infoTributaria><infoFactura><fechaEmision>08/10/2025</fechaEmision><dirEstablecimiento>AV 25 DE JUNIO 32 Y CALLEJON CESAR GARCIA-AV 25 DE JUNIO 32 Y CALLEJON CESAR GARCIA</dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>HASSLER GRANDA KLEINE HEBEL</razonSocialComprador><identificacionComprador>1712801552001</identificacionComprador><direccionComprador>AV. LOJA Y FLORESTA, SANTA ROSA</direccionComprador><totalSinImpuestos>1.30</totalSinImpuestos><totalDescuento>0.16</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>1.30</baseImponible><valor>0.20</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>1.50</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>01</formaPago><total>1.50</total></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>101167</codigoPrincipal><codigoAuxiliar>COD101167</codigoAuxiliar><descripcion>FUSIBLE MINI U A 10A FLOSSER 514810  504810 </descripcion><cantidad>2.00</cantidad><precioUnitario>0.25</precioUnitario><descuento>0.06</descuento><precioTotalSinImpuesto>0.44</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>0.44</baseImponible><valor>0.07</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>101288</codigoPrincipal><codigoAuxiliar>COD101288</codigoAuxiliar><descripcion>FUSIBLE MINI U A 25A 514825 FL 504825 </descripcion><cantidad>2.00</cantidad><precioUnitario>0.25</precioUnitario><descuento>0.06</descuento><precioTotalSinImpuesto>0.44</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>0.44</baseImponible><valor>0.07</valor></impuesto></impuestos></detalle><detalle><codigoPrincipal>101287</codigoPrincipal><codigoAuxiliar>COD101287</codigoAuxiliar><descripcion>FUSIBLE MINI U A 30A 514830 FL </descripcion><cantidad>2.00</cantidad><precioUnitario>0.23</precioUnitario><descuento>0.03</descuento><precioTotalSinImpuesto>0.42</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15.00</tarifa><baseImponible>0.42</baseImponible><valor>0.06</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Direccion">AV. LOJA Y FLORESTA, SANTA ROSA</campoAdicional><campoAdicional nombre="Telefono">0990223684</campoAdicional><campoAdicional nombre="Correo">kleine@hassler.ec</campoAdicional><campoAdicional nombre="Vendedor">vecca</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="Signature962666">
+<ds:SignedInfo>
+<ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+<ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+<ds:Reference Id="SignedPropertiesID965718" URI="#Signature962666-SignedPropertiesID295854" Type="http://uri.etsi.org/01903#SignedProperties">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>fVykDs2TwSnUvNW4hFUz1w6R6tA=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference URI="#Certificate827999">
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>xI6IdOhNLFtfWQaTWjp87sjqg44=</ds:DigestValue>
+</ds:Reference>
+<ds:Reference Id="Reference-ID-991383" URI="#comprobante">
+<ds:Transforms>
+<ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+</ds:Transforms>
+<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+<ds:DigestValue>zVkOsuhJ7HvnuCvDaewdDxXXHZ8=</ds:DigestValue>
+</ds:Reference>
+</ds:SignedInfo>
+<ds:SignatureValue>XBTKkADtBUUWh9s+fZTKqEJBbwdnzZHrc00kHf9QN6tKnXgJU+8O+p1yC+YJBH5h
+OeX4nBkr4JwFG7HHYc0neWV9gz4N1NkcnAkzPT+GfNKc+8YbwHc6belaFRISPnTn
+sH2bPqO5rEwWQqIebx7Wn89FhVDgEQOpCDiRwr4AfJZokW7X4tdZ69APVqQFeKxi
+uv48W6lpaRv/a3n//BSyZwaVLUUqT8+nhfTKWbsvx71ircmusgyLop61iw9SsauT
+dCqeZCFot7no2bHPSzfxUXvO8ZIhEpUuvQLI+dtGWwAcWUM+4Ok+CrgKQadQ9TZp
+yZ0Sa8Hwr9L3nRsDY1v09g==</ds:SignatureValue>
+<ds:KeyInfo Id="Certificate827999">
+<ds:X509Data>
+<ds:X509Certificate>MIIMLDCCChSgAwIBAgIEf5mQEzANBgkqhkiG9w0BAQsFADCBmTELMAkGA1UEBhMC
+RUMxHTAbBgNVBAoMFFNFQ1VSSVRZIERBVEEgUy5BLiAyMTAwLgYDVQQLDCdFTlRJ
+REFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xOTA3BgNVBAMMMEFV
+VE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQTAe
+Fw0yNDA1MTcyMDQ5MzBaFw0yOTA1MTcyMDQ5MzBaMIGqMSgwJgYDVQQDDB9DUklT
+VEhJQU4gSkFWSUVSIEpJTUVORVogTU9SRU5PMSAwHgYDVQQFExcwNzAzODUxMzQ1
+LTE3MDUyNDE1NTkyMDEwMC4GA1UECwwnRU5USURBRCBERSBDRVJUSUZJQ0FDSU9O
+IERFIElORk9STUFDSU9OMR0wGwYDVQQKDBRTRUNVUklUWSBEQVRBIFMuQS4gMjEL
+MAkGA1UEBhMCRUMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDP1Vdp
+sn4j8Ds6qKl44fdHa99DN4q9s1r7PNRNZy0UWvEZV4vtyOvWzHhX5QDRZhF+t9gp
+oSXgPRElE1U5Z1XN/jl69EJ8GKA5NXKY7mBlF75nyFUNJ+kmR6wnnnIec015yj+7
+GLBIdLWM/00wuhMBjxOV2D6uX9Na2nkLwnSklrecgTI9eHZV7G4iVxwR9QWQXzbx
+ZpovdVkgPjh5HKIdS7UDGV76NFUE6RuH70iYD1Rbr1ERl3bTpu5mDBUOOkNlqMNb
+40mZT1KlHKOdOhoPEEjI8yi5dqdBj6ZeL4lnCL+Wrd78HD2/gMKjvc4fqNYuEsSr
+Whg20sK6PPZK8QJPAgMBAAGjggdnMIIHYzAMBgNVHRMBAf8EAjAAMB8GA1UdIwQY
+MBaAFIy6yhFXeCWAHWsKS1W/ja5i3b2PMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEF
+BQcwAYY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1
+YmxpY3dlYi9zdGF0dXMvb2NzcDCBzwYDVR0uBIHHMIHEMIHBoIG+oIG7hoG4bGRh
+cDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBE
+RSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFE
+IERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRB
+IFMuQS4gMixDPUVDP2RlbHRhUmV2b2NhdGlvbkxpc3Q/YmFzZTAoBgNVHREEITAf
+gR1qaW1lbmV6amF2aWVyMTk4MEBob3RtYWlsLmNvbTCCARUGA1UdIASCAQwwggEI
+MGIGCisGAQQBgqZyAgkwVDBSBggrBgEFBQcCAjBGHkQAQwBlAHIAdABpAGYAaQBj
+AGEAZABvACAAZABlACAAUgBlAHAAcgBlAHMAZQBuAHQAYQBuAHQAZQAgAEwAZQBn
+AGEAbDCBoQYKKwYBBAGCpnICAzCBkjCBjwYIKwYBBQUHAgEWgYJodHRwczovL3d3
+dy5zZWN1cml0eWRhdGEubmV0LmVjL3dwLWNvbnRlbnQvZG93bmxvYWRzL05vcm1h
+dGl2YXMvUF9kZV9DZXJ0aWZpY2Fkb3MvUG9saXRpY2FzIGRlIENlcnRpZmljYWRv
+IFJlcHJlc2VudGFudGUgTGVnYWwucGRmMIICogYDVR0fBIICmTCCApUwgeWgQaA/
+hj1odHRwOi8vb2NzcGd3LnNlY3VyaXR5ZGF0YS5uZXQuZWMvZWpiY2EvcHVibGlj
+d2ViL3N0YXR1cy9vY3NwooGfpIGcMIGZMTkwNwYDVQQDDDBBVVRPUklEQUQgREUg
+Q0VSVElGSUNBQ0lPTiBTVUJDQS0yIFNFQ1VSSVRZIERBVEExMDAuBgNVBAsMJ0VO
+VElEQUQgREUgQ0VSVElGSUNBQ0lPTiBERSBJTkZPUk1BQ0lPTjEdMBsGA1UECgwU
+U0VDVVJJVFkgREFUQSBTLkEuIDIxCzAJBgNVBAYTAkVDMIHHoIHEoIHBhoG+bGRh
+cDovL2xkYXBzZGNhMi5zZWN1cml0eWRhdGEubmV0LmVjL0NOPUFVVE9SSURBRCBE
+RSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJVFkgREFUQSxPVT1FTlRJREFE
+IERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04sTz1TRUNVUklUWSBEQVRB
+IFMuQS4gMixDPUVDP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q/YmFzZTCB4KCB
+3aCB2oaB12h0dHBzOi8vcG9ydGFsLW9wZXJhZG9yMi5zZWN1cml0eWRhdGEubmV0
+LmVjL2VqYmNhL3B1YmxpY3dlYi93ZWJkaXN0L2NlcnRkaXN0P2NtZD1jcmwmaXNz
+dWVyPUNOPUFVVE9SSURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQkNBLTIgU0VDVVJJ
+VFkgREFUQSxPVT1FTlRJREFEIERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJ
+T04sTz1TRUNVUklUWSBEQVRBIFMuQS4gMixDPUVDMB0GA1UdDgQWBBTRrja43m8l
+G84GV1byD2jEBb1fnjArBgNVHRAEJDAigA8yMDI0MDUxNzIwNDkzMFqBDzIwMjkw
+NTE3MjA0OTMwWjALBgNVHQ8EBAMCBeAwFwYKKwYBBAGCpnIDBQQJDAdHRVJFTlRF
+MBoGCisGAQQBgqZyAwEEDAwKMDcwMzg1MTM0NTAXBgorBgEEAYKmcgMJBAkMB01B
+Q0hBTEEwEQYKKwYBBAGCpnIDIgQDDAEuMDQGCisGAQQBgqZyAwcEJgwkTUFEUkUg
+VEVSRVNBIENBTENVVEEgWSBMQSBJTk1BQ1VMQURBMCAGCisGAQQBgqZyAwIEEgwQ
+Q1JJU1RISUFOIEpBVklFUjAfBgorBgEEAYKmcgMgBBEMDzAwNjAwMTAwMDA2NjIw
+NjATBgorBgEEAYKmcgMhBAUMA1BGWDAXBgorBgEEAYKmcgMMBAkMB0VDVUFET1Iw
+FwYKKwYBBAGCpnIDAwQJDAdKSU1FTkVaMDwGCisGAQQBgqZyAwoELgwsSU1QT1JU
+QURPUkEgR1VFUlJFUk8gUEVSQUxWTyBJTUdVRVAgQ0lBIExUREEwHQYKKwYBBAGC
+pnIDCwQPDA0wNzkxODQzMjUxMDAxMBEGCisGAQQBgqZyAx0EAwwBLjAWBgorBgEE
+AYKmcgMEBAgMBk1PUkVOTzAaBgorBgEEAYKmcgMIBAwMCjA5OTc0ODQ4ODAwDQYJ
+KoZIhvcNAQELBQADggIBAHvlecq+EiGwMkLVmH1dLvC+eb9C30A+thNKJ2czQCX7
+Y126rTU3BWOzMPHUO/UWaSAquXOUy1jW9Ku7mOOoXVoKL6rSCOlN/Tb7uyaWDTe9
+cYozoVTgtXzmV8vKvaF9xjVfAtR4177sn5fgpwnrlWH26WPwsn/RCtm3MSURrNnL
+0WAjzPGhXOkQPVxrwLjeNsTh/tqMVkwfAie+uAa+i/D8zO1hBkOVTTc+SS4NRgiR
+K5QYj1EVizdVwnHPOcVEEC5Ggjv5f7lX8xGSghiJMmQjZhWAwRwD9j2bEKT6Hk/f
+IG2CgvyAvlEU167cxgrQ6ffT0uh755B2PYIuQMtnnGePVJZ/fGd9uilEbucNEp9D
+d6NqrIGEOOsiAFofNbbHZmK/08UPFPIyW820NcXg11ZqDqbp5fnw/LdEOjhaBtYT
+DoZFfV9vmg2BhFHtPJ7nNEWMzoRuEgG5KaSP4ZK9OVti1Nt9qplXEnKC+VB4RymI
+sQgAiLYc+b1n7oQBfwzyvSnJzZVFwB65Dzb9f+4kz4sDI26oX3jcvN0YTkRcqt44
+LqJhnwUVe0OSMouy3Ypnc5ChxABDNrwMt8kIrkX+J4BLOD0x0BnK+NFSnajCBMZs
+mUHFzC7aPF1EarbjMK5O7NfefB71/HkG5hbXZ5ta29l/AAsKQE39NdOLw6C1p/iE</ds:X509Certificate>
+</ds:X509Data>
+<ds:KeyValue>
+<ds:RSAKeyValue>
+<ds:Modulus>z9VXabJ+I/A7OqipeOH3R2vfQzeKvbNa+zzUTWctFFrxGVeL7cjr1sx4V+UA0WYR
+frfYKaEl4D0RJRNVOWdVzf45evRCfBigOTVymO5gZRe+Z8hVDSfpJkesJ55yHnNN
+eco/uxiwSHS1jP9NMLoTAY8Tldg+rl/TWtp5C8J0pJa3nIEyPXh2VexuIlccEfUF
+kF828WaaL3VZID44eRyiHUu1Axle+jRVBOkbh+9ImA9UW69REZd206buZgwVDjpD
+ZajDW+NJmU9SpRyjnToaDxBIyPMouXanQY+mXi+JZwi/lq3e/Bw9v4DCo73OH6jW
+LhLEq1oYNtLCujz2SvECTw==</ds:Modulus>
+<ds:Exponent>AQAB</ds:Exponent>
+</ds:RSAKeyValue>
+</ds:KeyValue>
+</ds:KeyInfo>
+<ds:Object><etsi:QualifyingProperties xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Target="#Signature962666" Id="Signature962666"><etsi:SignedProperties Id="Signature962666-SignedPropertiesID295854"><etsi:SignedSignatureProperties><etsi:SigningTime>2025-10-08T13:08:18+00:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>tLNpmbDCmJSFIrDBOFW9xw42Nww=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>C=EC,O=SECURITY DATA S.A. 2,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,CN=AUTORIDAD DE CERTIFICACION SUBCA-2 SECURITY DATA</ds:X509IssuerName><ds:X509SerialNumber>2140770323</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate><etsi:SignaturePolicyIdentifier><etsi:SignaturePolicyImplied/></etsi:SignaturePolicyIdentifier></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-991383"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura>]]></comprobante>
+<mensajes/>
+</autorizacion>
+

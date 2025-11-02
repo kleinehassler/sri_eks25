@@ -1,0 +1,38 @@
+{
+  "name": "sri-ats-sistema-completo",
+  "version": "1.0.0",
+  "description": "Sistema Multi-empresa de Reportes Tributarios ATS para el SRI de Ecuador",
+  "private": true,
+  "scripts": {
+    "dev": "npx concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "start": "npx concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build:frontend": "cd frontend && npm run build",
+    "migrate": "cd backend && npm run migrate",
+    "migrate:undo": "cd backend && npm run migrate:undo",
+    "seed": "cd backend && npm run seed",
+    "test": "cd backend && npm test",
+    "clean": "rm -rf node_modules backend/node_modules frontend/node_modules"
+  },
+  "keywords": [
+    "sri",
+    "ats",
+    "ecuador",
+    "tax",
+    "reportes",
+    "anexo-transaccional"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

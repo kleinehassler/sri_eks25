@@ -1,0 +1,166 @@
+import { useState } from 'react';
+import {
+  Paper,
+  Box,
+  Grid,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+
+function FiltrosReporte({ onAplicarFiltros, onExportar, mostrarExportar = true, tipoReporte = 'general' }) {
+  const currentDate = new Date();
+  const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+  const currentYear = currentDate.getFullYear().toString();
+
+  const [filtros, setFiltros] = useState({
+    periodoInicio: `${currentMonth}/${currentYear}`,
+    periodoFin: `${currentMonth}/${currentYear}`,
+    estado: '',
+    busqueda: ''
+  });
+
+  const handleChange = (field, value) => {
+    setFiltros(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleAplicar = () => {
+    onAplicarFiltros(filtros);
+  };
+
+  const handleLimpiar = () => {
+    const filtrosLimpios = {
+      periodoInicio: `${currentMonth}/${currentYear}`,
+      periodoFin: `${currentMonth}/${currentYear}`,
+      estado: '',
+      busqueda: ''
+    };
+    setFiltros(filtrosLimpios);
+    onAplicarFiltros(filtrosLimpios);
+  };
+
+  const handleExportar = (formato) => {
+    if (onExportar) {
+      onExportar(formato, filtros);
+    }
+  };
+
+  return (
+    <Paper sx={{ p: 3, mb: 3 }}>
+      <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        🔍 Filtros de Búsqueda
+      </Typography>
+
+      <Grid container spacing={2} sx={{ mb: 2 }}>
+        {/* Periodo Inicio */}
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Periodo Inicio"
+            placeholder="MM/YYYY"
+            value={filtros.periodoInicio}
+            onChange={(e) => handleChange('periodoInicio', e.target.value)}
+            helperText="Formato: MM/YYYY"
+          />
+        </Grid>
+
+        {/* Periodo Fin */}
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Periodo Fin"
+            placeholder="MM/YYYY"
+            value={filtros.periodoFin}
+            onChange={(e) => handleChange('periodoFin', e.target.value)}
+            helperText="Formato: MM/YYYY"
+          />
+        </Grid>
+
+        {/* Estado */}
+        <Grid item xs={12} sm={6} md={3}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Estado</InputLabel>
+            <Select
+              value={filtros.estado}
+              label="Estado"
+              onChange={(e) => handleChange('estado', e.target.value)}
+            >
+              <MenuItem value="">Todos</MenuItem>
+              <MenuItem value="BORRADOR">Borrador</MenuItem>
+              <MenuItem value="VALIDADO">Validado</MenuItem>
+              <MenuItem value="INCLUIDO_ATS">Incluido ATS</MenuItem>
+              <MenuItem value="ANULADO">Anulado</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+
+        {/* Búsqueda */}
+        <Grid item xs={12} sm={6} md={3}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Buscar"
+            placeholder={tipoReporte === 'compras' ? 'Proveedor o RUC...' : tipoReporte === 'ventas' ? 'Cliente o RUC...' : 'Buscar...'}
+            value={filtros.busqueda}
+            onChange={(e) => handleChange('busqueda', e.target.value)}
+          />
+        </Grid>
+      </Grid>
+
+      {/* Botones de acción */}
+      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Button
+          variant="contained"
+          startIcon={<SearchIcon />}
+          onClick={handleAplicar}
+        >
+          Generar Reporte
+        </Button>
+
+        <Button
+          variant="outlined"
+          startIcon={<ClearIcon />}
+          onClick={handleLimpiar}
+        >
+          Limpiar Filtros
+        </Button>
+
+        {mostrarExportar && (
+          <>
+            <Box sx={{ flexGrow: 1 }} />
+            <Button
+              variant="outlined"
+              color="success"
+              startIcon={<FileDownloadIcon />}
+              onClick={() => handleExportar('excel')}
+            >
+              Exportar Excel
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<FileDownloadIcon />}
+              onClick={() => handleExportar('pdf')}
+            >
+              Exportar PDF
+            </Button>
+          </>
+        )}
+      </Box>
+    </Paper>
+  );
+}
+
+export default FiltrosReporte;
