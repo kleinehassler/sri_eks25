@@ -472,11 +472,15 @@ class CompraService {
         };
       }
 
+      console.log('Buscando compras anuladas con filtros:', where);
+
       // Obtener todas las compras ANULADAS que cumplan los filtros
       const comprasAnuladas = await Compra.findAll({
         where,
         transaction
       });
+
+      console.log(`Encontradas ${comprasAnuladas.length} compras anuladas`);
 
       if (comprasAnuladas.length === 0) {
         await transaction.rollback();
@@ -488,18 +492,23 @@ class CompraService {
 
       // Extraer IDs de las compras a eliminar
       const compraIds = comprasAnuladas.map(c => c.id);
+      console.log('IDs de compras a eliminar:', compraIds);
 
       // Eliminar retenciones asociadas primero (por la foreign key)
-      await Retencion.destroy({
+      console.log('Eliminando retenciones asociadas...');
+      const retencionesEliminadas = await Retencion.destroy({
         where: { compra_id: { [Op.in]: compraIds } },
         transaction
       });
+      console.log(`${retencionesEliminadas} retenciones eliminadas`);
 
       // Eliminar las compras
+      console.log('Eliminando compras...');
       const eliminados = await Compra.destroy({
         where: { id: { [Op.in]: compraIds } },
         transaction
       });
+      console.log(`${eliminados} compras eliminadas`);
 
       await transaction.commit();
 
@@ -509,7 +518,13 @@ class CompraService {
       };
     } catch (error) {
       await transaction.rollback();
-      throw error;
+      console.error('Error detallado al eliminar compras anuladas:', {
+        mensaje: error.message,
+        stack: error.stack,
+        nombre: error.name,
+        sql: error.sql
+      });
+      throw new AppError(`Error al eliminar compras anuladas: ${error.message}`, 500);
     }
   }
 

@@ -225,9 +225,17 @@ class CompraController {
 
       console.log('Resultado:', resultado);
 
-      res.json(resultado);
+      // Asegurar que el resultado tenga la estructura correcta
+      res.json({
+        mensaje: resultado.mensaje || 'Operación completada',
+        eliminados: resultado.eliminados || 0
+      });
     } catch (error) {
-      console.error('Error al eliminar compras anuladas:', error);
+      console.error('Error al eliminar compras anuladas en controlador:', {
+        mensaje: error.message,
+        stack: error.stack,
+        nombre: error.name
+      });
       next(error);
     }
   }

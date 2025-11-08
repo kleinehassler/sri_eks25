@@ -21,7 +21,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Tooltip
+  Tooltip,
+  CircularProgress
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -30,6 +31,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import { formatEstablecimiento, formatPuntoEmision, formatSecuencial } from '../../utils/formatters';
+import codigoRetencionService from '../../services/codigoRetencionService';
 
 // Tipos de impuesto
 const tiposImpuesto = [
@@ -37,27 +39,14 @@ const tiposImpuesto = [
   { value: 'IVA', label: 'IVA' }
 ];
 
-// Códigos de retención IR más comunes
-const codigosRetencionIR = [
-  { value: '303', label: '303 - Servicios predomina intelecto - 1%' },
-  { value: '304', label: '304 - Servicios predomina mano de obra - 2%' },
-  { value: '332', label: '332 - Otros servicios - 2%' },
-  { value: '340', label: '340 - Transporte privado de pasajeros - 1%' },
-  { value: '341', label: '341 - Transporte público de pasajeros - 1%' },
-  { value: '310', label: '310 - Honorarios profesionales - 10%' },
-  { value: '320', label: '320 - Arrendamiento inmuebles - 8%' },
-  { value: '323', label: '323 - Arrendamiento mercantil - 1%' },
-  { value: '343', label: '343 - Publicidad y comunicación - 1%' },
-];
-
-// Códigos de retención IVA
+// Códigos de retención IVA (estos se mantienen hardcodeados porque son porcentajes fijos de retención de IVA)
 const codigosRetencionIVA = [
-  { value: '10', label: '10 - Retención 10%' },
-  { value: '20', label: '20 - Retención 20%' },
-  { value: '30', label: '30 - Retención 30%' },
-  { value: '50', label: '50 - Retención 50%' },
-  { value: '70', label: '70 - Retención 70%' },
-  { value: '100', label: '100 - Retención 100%' },
+  { value: '10', label: '10 - Retención 10%', porcentaje: 10 },
+  { value: '20', label: '20 - Retención 20%', porcentaje: 20 },
+  { value: '30', label: '30 - Retención 30%', porcentaje: 30 },
+  { value: '50', label: '50 - Retención 50%', porcentaje: 50 },
+  { value: '70', label: '70 - Retención 70%', porcentaje: 70 },
+  { value: '100', label: '100 - Retención 100%', porcentaje: 100 },
 ];
 
 // Porcentajes de retención según código IVA
@@ -95,6 +84,47 @@ function RetencionesForm({
   const [retencionActual, setRetencionActual] = useState(retencionVacia);
   const [editandoIndex, setEditandoIndex] = useState(null);
   const [error, setError] = useState(null);
+  const [codigosRetencionIR, setCodigosRetencionIR] = useState([]);
+  const [loadingCodigos, setLoadingCodigos] = useState(true);
+  const [errorCargaCodigos, setErrorCargaCodigos] = useState(null);
+
+  // Cargar códigos de retención de renta desde el backend
+  useEffect(() => {
+    const cargarCodigosRetencion = async () => {
+      try {
+        setLoadingCodigos(true);
+        setErrorCargaCodigos(null);
+        const response = await codigoRetencionService.getActivos();
+
+        // Formatear los códigos para el selector
+        const codigosFormateados = response.data.map(codigo => ({
+          value: codigo.codigo,
+          label: `${codigo.codigo} - ${codigo.descripcion} (${codigo.porcentaje})`,
+          porcentaje: codigo.porcentaje
+        }));
+
+        setCodigosRetencionIR(codigosFormateados);
+      } catch (err) {
+        console.error('Error al cargar códigos de retención:', err);
+        setErrorCargaCodigos('Error al cargar códigos de retención. Usando códigos predeterminados.');
+        // Fallback a una lista básica en caso de error
+        setCodigosRetencionIR([
+          { value: '303', label: '303 - Honorarios profesionales (10)', porcentaje: '10' },
+          { value: '304', label: '304 - Servicios predomina intelecto (10)', porcentaje: '10' },
+          { value: '307', label: '307 - Servicios predomina mano de obra (2)', porcentaje: '2' },
+          { value: '310', label: '310 - Servicio de transporte (1)', porcentaje: '1' },
+          { value: '312', label: '312 - Transferencia de bienes (1.75)', porcentaje: '1.75' },
+          { value: '320', label: '320 - Arrendamiento inmuebles (10)', porcentaje: '10' },
+          { value: '332', label: '332 - Otras compras no sujetas a retención (0)', porcentaje: '0' },
+          { value: '343', label: '343 - Otras retenciones aplicables 1% (1)', porcentaje: '1' },
+        ]);
+      } finally {
+        setLoadingCodigos(false);
+      }
+    };
+
+    cargarCodigosRetencion();
+  }, []);
 
   // Efecto para auto-completar fecha de emisión cuando cambia la fecha de la compra
   useEffect(() => {
@@ -164,6 +194,23 @@ function RetencionesForm({
         updated.porcentaje_retencion = porcentaje;
         const base = parseFloat(updated.base_imponible) || 0;
         updated.valor_retenido = ((base * porcentaje) / 100).toFixed(2);
+      }
+
+      // Si selecciona código de retención IR, intentar extraer porcentaje del código
+      if (field === 'codigo_retencion' && updated.tipo_impuesto === 'RENTA') {
+        const codigoSeleccionado = codigosRetencionIR.find(c => c.value === value);
+        if (codigoSeleccionado && codigoSeleccionado.porcentaje) {
+          // Intentar convertir el porcentaje a número
+          const porcentajeStr = codigoSeleccionado.porcentaje;
+          const porcentajeNumerico = parseFloat(porcentajeStr);
+
+          // Solo auto-completar si es un número válido
+          if (!isNaN(porcentajeNumerico)) {
+            updated.porcentaje_retencion = porcentajeNumerico;
+            const base = parseFloat(updated.base_imponible) || 0;
+            updated.valor_retenido = ((base * porcentajeNumerico) / 100).toFixed(2);
+          }
+        }
       }
 
       return updated;

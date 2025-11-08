@@ -33,8 +33,8 @@ const validarCrearCompra = [
     .trim()
     .notEmpty()
     .withMessage('El tipo de identificación es requerido')
-    .isLength({ min: 2, max: 2 })
-    .withMessage('El tipo de identificación debe tener 2 caracteres'),
+    .isIn(['01', '02', '03', '07', '08'])
+    .withMessage('El tipo de identificación debe ser 01 (RUC), 02 (Cédula), 03 (Pasaporte), 07 (Consumidor Final) u 08 (Identificación del Exterior)'),
 
   body('identificacion_proveedor')
     .trim()
@@ -91,50 +91,59 @@ const validarCrearCompra = [
     .withMessage('El número de autorización debe tener entre 10 y 49 caracteres'),
 
   body('base_imponible_0')
-    .optional()
+    .optional({ checkFalsy: true })
     .isFloat({ min: 0 })
-    .withMessage('La base imponible 0% debe ser un número mayor o igual a 0'),
+    .withMessage('La base imponible 0% debe ser un número mayor o igual a 0')
+    .toFloat(),
 
   body('base_imponible_iva')
-    .optional()
+    .optional({ checkFalsy: true })
     .isFloat({ min: 0 })
-    .withMessage('La base imponible IVA debe ser un número mayor o igual a 0'),
+    .withMessage('La base imponible IVA debe ser un número mayor o igual a 0')
+    .toFloat(),
 
   body('base_imponible_no_objeto_iva')
-    .optional()
+    .optional({ checkFalsy: true })
     .isFloat({ min: 0 })
-    .withMessage('La base imponible no objeto IVA debe ser un número mayor o igual a 0'),
+    .withMessage('La base imponible no objeto IVA debe ser un número mayor o igual a 0')
+    .toFloat(),
 
   body('base_imponible_exento_iva')
-    .optional()
+    .optional({ checkFalsy: true })
     .isFloat({ min: 0 })
-    .withMessage('La base imponible exento IVA debe ser un número mayor o igual a 0'),
+    .withMessage('La base imponible exento IVA debe ser un número mayor o igual a 0')
+    .toFloat(),
 
   body('monto_iva')
-    .optional()
+    .optional({ checkFalsy: true })
     .isFloat({ min: 0 })
-    .withMessage('El monto IVA debe ser un número mayor o igual a 0'),
+    .withMessage('El monto IVA debe ser un número mayor o igual a 0')
+    .toFloat(),
 
   body('monto_ice')
-    .optional()
+    .optional({ checkFalsy: true })
     .isFloat({ min: 0 })
-    .withMessage('El monto ICE debe ser un número mayor o igual a 0'),
+    .withMessage('El monto ICE debe ser un número mayor o igual a 0')
+    .toFloat(),
 
   body('valor_retencion_iva')
-    .optional()
+    .optional({ checkFalsy: true })
     .isFloat({ min: 0 })
-    .withMessage('El valor de retención IVA debe ser un número mayor o igual a 0'),
+    .withMessage('El valor de retención IVA debe ser un número mayor o igual a 0')
+    .toFloat(),
 
   body('valor_retencion_renta')
-    .optional()
+    .optional({ checkFalsy: true })
     .isFloat({ min: 0 })
-    .withMessage('El valor de retención renta debe ser un número mayor o igual a 0'),
+    .withMessage('El valor de retención renta debe ser un número mayor o igual a 0')
+    .toFloat(),
 
   body('total_compra')
     .notEmpty()
     .withMessage('El total de compra es requerido')
     .isFloat({ min: 0 })
-    .withMessage('El total de compra debe ser un número mayor o igual a 0'),
+    .withMessage('El total de compra debe ser un número mayor o igual a 0')
+    .toFloat(),
 
   body('forma_pago')
     .optional()

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Typography,
   Paper,
@@ -15,6 +16,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import VentasTable from '../components/Ventas/VentasTable';
 import VentaForm from '../components/Ventas/VentaForm';
 import ventaService from '../services/ventaService';
@@ -22,6 +24,7 @@ import { useAuth } from '../context/AuthContext';
 
 function Ventas() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [ventas, setVentas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
@@ -191,6 +194,15 @@ function Ventas() {
             Eliminar Anulados
           </Button>
           <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<CloudDownloadIcon />}
+            onClick={() => navigate('/importar-ventas-sri')}
+            size="large"
+          >
+            Importar desde SRI
+          </Button>
+          <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => handleOpenForm()}
@@ -208,6 +220,7 @@ function Ventas() {
         </Typography>
         <ul style={{ margin: 0, paddingLeft: 20 }}>
           <li>Registra todas las ventas del periodo fiscal correspondiente</li>
+          <li><strong>Importa desde el SRI:</strong> Usa claves de acceso o archivos XML de facturas electrónicas</li>
           <li>Valida cada venta antes de incluirla en el ATS</li>
           <li>Solo las ventas con estado VALIDADO se incluirán en el anexo</li>
           <li>Verifica que los datos coincidan con los comprobantes electrónicos emitidos</li>

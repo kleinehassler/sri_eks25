@@ -62,8 +62,8 @@ const validarCrearExportacion = [
     .trim()
     .notEmpty()
     .withMessage('El tipo de identificación es requerido')
-    .isLength({ min: 2, max: 2 })
-    .withMessage('El tipo de identificación debe tener 2 caracteres'),
+    .isIn(['01', '02', '03', '07', '08'])
+    .withMessage('El tipo de identificación debe ser 01 (RUC), 02 (Cédula), 03 (Pasaporte), 07 (Consumidor Final) u 08 (Identificación del Exterior)'),
 
   body('identificacion_cliente')
     .trim()
@@ -213,8 +213,8 @@ const validarActualizarExportacion = [
   body('tipo_identificacion')
     .optional()
     .trim()
-    .isLength({ min: 2, max: 2 })
-    .withMessage('El tipo de identificación debe tener 2 caracteres'),
+    .isIn(['01', '02', '03', '07', '08'])
+    .withMessage('El tipo de identificación debe ser 01 (RUC), 02 (Cédula), 03 (Pasaporte), 07 (Consumidor Final) u 08 (Identificación del Exterior)'),
 
   body('identificacion_cliente')
     .optional()

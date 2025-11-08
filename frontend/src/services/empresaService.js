@@ -1,6 +1,6 @@
 import axios from '../config/axios';
 
-const API_URL = '/api/empresas';
+const API_URL = '/empresas';
 
 const empresaService = {
   // Obtener todas las empresas

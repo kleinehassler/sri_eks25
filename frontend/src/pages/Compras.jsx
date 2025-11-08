@@ -102,9 +102,11 @@ function Compras() {
       handleCloseForm();
       await loadCompras();
     } catch (err) {
-      const errorMsg = err.mensaje || err.message || 'Error al guardar la compra';
+      // El error ya viene formateado del servicio como un objeto Error
+      const errorMsg = err.message || 'Error al guardar la compra';
       showSnackbar(errorMsg, 'error');
-      throw new Error(errorMsg);
+      console.error('Error al guardar compra:', err);
+      throw err; // Re-lanzar el error para que el formulario lo capture
     } finally {
       setLoading(false);
     }
@@ -235,8 +237,10 @@ function Compras() {
       // Recargar las compras
       await loadCompras();
     } catch (err) {
-      const errorMsg = err.mensaje || 'Error al eliminar las compras anuladas';
+      // El error ya viene formateado del servicio como un objeto Error
+      const errorMsg = err.message || 'Error al eliminar las compras anuladas';
       showSnackbar(errorMsg, 'error');
+      console.error('Error al eliminar compras anuladas:', err);
       setResultadoEliminacionAnulados({ error: errorMsg });
     } finally {
       setLoading(false);

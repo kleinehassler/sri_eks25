@@ -164,6 +164,17 @@ const Exportacion = sequelize.define('Exportacion', {
   forma_pago: {
     type: DataTypes.STRING(2)
   },
+  tipo_emision: {
+    type: DataTypes.STRING(1),
+    allowNull: false,
+    defaultValue: 'E',
+    validate: {
+      isIn: {
+        args: [['E', 'F']],
+        msg: 'El tipo de emisión debe ser E (Electrónica) o F (Física)'
+      }
+    }
+  },
   distrito_exportacion: {
     type: DataTypes.STRING(3)
   },

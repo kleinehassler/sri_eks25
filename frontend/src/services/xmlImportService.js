@@ -1,7 +1,7 @@
 import axios from '../config/axios';
 
-const API_URL_XML = '/api/xml';
-const API_URL_COMPRAS = '/api/compras';
+const API_URL_XML = '/xml';
+const API_URL_COMPRAS = '/compras';
 
 const xmlImportService = {
   /**
@@ -138,6 +138,23 @@ const xmlImportService = {
     }
   },
 
+  // Importar factura de VENTA XML
+  importarFacturaVenta: async (file, additionalData = {}) => {
+    try {
+      const formData = new FormData();
+      formData.append('xmlFile', file);
+
+      const response = await axios.post(`${API_URL_XML}/importar-factura-venta`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
   // Importar múltiples archivos XML
   importarMultiple: async (files, additionalData = {}, tipoDocumento = 'factura') => {
     const results = [];
@@ -149,7 +166,10 @@ const xmlImportService = {
         let result;
         if (tipoDocumento === 'factura') {
           result = await xmlImportService.importarFactura(file, additionalData);
-          console.log(`✓ ${file.name} importado correctamente`);
+          console.log(`✓ ${file.name} importado correctamente como compra`);
+        } else if (tipoDocumento === 'venta') {
+          result = await xmlImportService.importarFacturaVenta(file, additionalData);
+          console.log(`✓ ${file.name} importado correctamente como venta`);
         } else {
           result = await xmlImportService.importarRetencion(file, additionalData);
           console.log(`✓ ${file.name} importado correctamente`);

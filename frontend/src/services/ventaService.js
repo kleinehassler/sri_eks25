@@ -1,6 +1,6 @@
 import axios from '../config/axios';
 
-const API_URL = '/api/ventas';
+const API_URL = '/ventas';
 
 const ventaService = {
   // Obtener todas las ventas con filtros opcionales
@@ -89,6 +89,50 @@ const ventaService = {
       if (filters.fecha_hasta) params.append('fecha_hasta', filters.fecha_hasta);
 
       const response = await axios.delete(`${API_URL}/eliminar-anulados?${params.toString()}`);
+      return response.data;
+    } catch (error) {
+      // Extraer el mensaje de error del backend
+      const errorData = error.response?.data;
+      if (errorData) {
+        // Si hay detalles de validación, construir un mensaje más descriptivo
+        if (errorData.detalles && Array.isArray(errorData.detalles)) {
+          const mensajesDetalle = errorData.detalles.map(d => `${d.campo}: ${d.mensaje}`).join(', ');
+          throw new Error(`${errorData.error || errorData.mensaje || 'Error al eliminar'}: ${mensajesDetalle}`);
+        }
+        // Si no hay detalles, usar el mensaje principal
+        throw new Error(errorData.error || errorData.mensaje || 'Error al eliminar las ventas anuladas');
+      }
+      throw new Error(error.message || 'Error al eliminar las ventas anuladas');
+    }
+  },
+
+  // Importar ventas masivamente desde archivo .txt con claves de acceso del SRI
+  importarDesdeArchivo: async (archivo, empresaId, ambiente = 'PRODUCCION') => {
+    try {
+      const formData = new FormData();
+      formData.append('archivo', archivo);
+      formData.append('empresa_id', empresaId);
+      formData.append('ambiente', ambiente);
+
+      const response = await axios.post(`${API_URL}/importar-desde-sri`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Importar una única venta desde el SRI usando la clave de acceso
+  importarVentaUnica: async (claveAcceso, empresaId, ambiente = 'PRODUCCION') => {
+    try {
+      const response = await axios.post(`${API_URL}/importar-desde-sri/unica`, {
+        clave_acceso: claveAcceso,
+        empresa_id: empresaId,
+        ambiente
+      });
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;

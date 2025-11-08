@@ -1,6 +1,7 @@
 const Empresa = require('./Empresa');
 const Usuario = require('./Usuario');
 const ParametroSri = require('./ParametroSri');
+const CodigoRetencion = require('./CodigoRetencion');
 const Compra = require('./Compra');
 const Retencion = require('./Retencion');
 const Venta = require('./Venta');
@@ -157,6 +158,7 @@ module.exports = {
   Empresa,
   Usuario,
   ParametroSri,
+  CodigoRetencion,
   Compra,
   Retencion,
   Venta,

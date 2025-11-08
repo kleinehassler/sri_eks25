@@ -9,7 +9,7 @@ module.exports = {
       // TIPOS DE IDENTIFICACIÓN
       {
         tipo_parametro: 'TIPO_IDENTIFICACION',
-        codigo: '04',
+        codigo: '01',
         descripcion: 'RUC',
         estado: 'ACTIVO',
         created_at: now,
@@ -17,7 +17,7 @@ module.exports = {
       },
       {
         tipo_parametro: 'TIPO_IDENTIFICACION',
-        codigo: '05',
+        codigo: '02',
         descripcion: 'Cédula',
         estado: 'ACTIVO',
         created_at: now,
@@ -25,7 +25,7 @@ module.exports = {
       },
       {
         tipo_parametro: 'TIPO_IDENTIFICACION',
-        codigo: '06',
+        codigo: '03',
         descripcion: 'Pasaporte',
         estado: 'ACTIVO',
         created_at: now,

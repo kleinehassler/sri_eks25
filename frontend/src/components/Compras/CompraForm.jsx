@@ -56,9 +56,9 @@ const tiposProveedor = [
 
 // Tipos de identificación
 const tiposIdentificacion = [
-  { value: '04', label: '04 - RUC' },
-  { value: '05', label: '05 - Cédula' },
-  { value: '06', label: '06 - Pasaporte' },
+  { value: '01', label: '01 - RUC' },
+  { value: '02', label: '02 - Cédula' },
+  { value: '03', label: '03 - Pasaporte' },
   { value: '07', label: '07 - Consumidor Final' },
   { value: '08', label: '08 - Identificación del Exterior' },
 ];
@@ -143,7 +143,7 @@ function CompraForm({ open, onClose, compra, onSubmit, loading, empresaId }) {
     initialValues: {
       empresa_id: empresaId || compra?.empresa_id || '',
       tipo_proveedor: compra?.tipo_proveedor || '02',
-      tipo_identificacion: compra?.tipo_identificacion || '04',
+      tipo_identificacion: compra?.tipo_identificacion || '01',
       identificacion_proveedor: compra?.identificacion_proveedor || '',
       razon_social_proveedor: compra?.razon_social_proveedor || '',
       tipo_comprobante: compra?.tipo_comprobante || '01',
@@ -179,7 +179,11 @@ function CompraForm({ open, onClose, compra, onSubmit, loading, empresaId }) {
         formik.resetForm();
         setRetenciones([]);
       } catch (error) {
-        setSubmitError(error.message || 'Error al guardar la compra');
+        const errorMessage = error.message || 'Error al guardar la compra';
+        setSubmitError(errorMessage);
+        console.error('Error en formulario de compra:', error);
+        // No re-lanzar el error aquí para evitar que formik lo maneje
+        // El error ya se muestra en el Alert dentro del formulario
       }
     },
   });

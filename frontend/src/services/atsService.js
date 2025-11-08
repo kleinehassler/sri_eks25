@@ -1,6 +1,6 @@
 import axios from '../config/axios';
 
-const API_URL = '/api/ats';
+const API_URL = '/ats';
 
 const atsService = {
   // Obtener resumen de transacciones para un periodo

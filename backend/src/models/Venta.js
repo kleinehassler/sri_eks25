@@ -213,6 +213,17 @@ const Venta = sequelize.define('Venta', {
   forma_pago: {
     type: DataTypes.STRING(2)
   },
+  tipo_emision: {
+    type: DataTypes.STRING(1),
+    allowNull: false,
+    defaultValue: 'E',
+    validate: {
+      isIn: {
+        args: [['E', 'F']],
+        msg: 'El tipo de emisión debe ser E (Electrónica) o F (Física)'
+      }
+    }
+  },
   estado: {
     type: DataTypes.ENUM('BORRADOR', 'VALIDADO', 'INCLUIDO_ATS', 'ANULADO'),
     allowNull: false,

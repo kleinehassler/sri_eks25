@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
 
   const loadUser = async () => {
     try {
-      const response = await axios.get('/api/auth/perfil')
+      const response = await axios.get('/auth/perfil')
       setUser(response.data.data)
     } catch (error) {
       console.error('Error al cargar usuario:', error)
@@ -41,7 +41,7 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('/api/auth/login', { email, password })
+      const response = await axios.post('/auth/login', { email, password })
       const { accessToken, refreshToken, usuario } = response.data.data
 
       // Guardar tokens (el interceptor de axios los usará automáticamente)

@@ -1,5 +1,6 @@
 const xmlImportService = require('../services/xmlImportService');
 const compraService = require('../services/compraService');
+const ventaService = require('../services/ventaService');
 const { AppError } = require('../middlewares/errorHandler');
 const multer = require('multer');
 const path = require('path');
@@ -300,6 +301,128 @@ class XmlImportController {
         try {
           const fs = require('fs').promises;
           await fs.unlink(req.file.path);
+        } catch (unlinkError) {
+          console.error('Error al eliminar archivo temporal:', unlinkError);
+        }
+      }
+      next(error);
+    }
+  }
+
+  /**
+   * Importar factura de VENTA desde XML
+   */
+  async importarFacturaVenta(req, res, next) {
+    try {
+      const fs = require('fs').promises;
+
+      console.log('=== INICIANDO IMPORTACIÓN DE FACTURA DE VENTA ===');
+      console.log('Usuario ID:', req.usuario?.id);
+      console.log('Empresa ID:', req.empresaId);
+      console.log('Archivo recibido:', req.file);
+      console.log('Body recibido:', req.body);
+
+      const empresaId = req.empresaId;
+      const usuarioId = req.usuario.id;
+
+      if (!req.file) {
+        console.error('ERROR: No se recibió archivo');
+        throw new AppError('Debe proporcionar un archivo XML', 400);
+      }
+
+      console.log('Leyendo archivo:', req.file.path);
+
+      // Leer contenido del archivo
+      const xmlContent = await fs.readFile(req.file.path, 'utf-8');
+
+      console.log('Archivo leído. Longitud:', xmlContent.length);
+
+      // Detectar tipo
+      const tipoComprobante = xmlImportService.detectarTipoComprobante(xmlContent);
+      console.log('Tipo de comprobante detectado:', tipoComprobante);
+
+      if (tipoComprobante !== 'FACTURA') {
+        console.error('ERROR: Tipo de comprobante incorrecto:', tipoComprobante);
+        throw new AppError('El XML no corresponde a una factura electrónica', 400);
+      }
+
+      console.log('Parseando factura de venta (sin validación XSD)...');
+      // Parsear factura de VENTA SIN validación XSD
+      const resultado = await xmlImportService.parsearYValidarFacturaVenta(xmlContent, false);
+
+      console.log('Resultado de validación XSD:', {
+        valido: resultado.validacion.valido,
+        errores: resultado.validacion.errores.length,
+        advertencias: resultado.validacion.advertencias.length,
+        metodo: resultado.validacion.metodo
+      });
+
+      // Si no se pudo parsear, retornar error de validación
+      if (!resultado.parseado) {
+        return res.status(400).json({
+          mensaje: 'El XML tiene errores de validación',
+          validacion: resultado.validacion,
+          errores: resultado.validacion.errores,
+          advertencias: resultado.validacion.advertencias
+        });
+      }
+
+      const datosFactura = resultado.datos;
+      console.log('Datos de factura parseados:', datosFactura);
+
+      // Extraer periodo del XML
+      const fechaEmision = new Date(datosFactura.fecha_emision);
+      const mes = (fechaEmision.getMonth() + 1).toString().padStart(2, '0');
+      const anio = fechaEmision.getFullYear();
+      const periodo = `${mes}/${anio}`;
+
+      console.log('Periodo calculado:', periodo);
+
+      // Preparar datos para crear venta
+      const datosVenta = {
+        ...datosFactura,
+        empresa_id: empresaId,
+        periodo,
+        fecha_registro: new Date(),
+        archivo_xml: req.file.path,
+        estado: 'BORRADOR',
+        valor_retencion_iva: 0,
+        valor_retencion_renta: 0
+      };
+
+      console.log('Datos de venta preparados:', {
+        ...datosVenta,
+        xml_original: '...(omitido)...'
+      });
+
+      // Crear venta
+      console.log('Creando venta en la base de datos...');
+      const venta = await ventaService.crear(datosVenta, usuarioId);
+
+      console.log('Venta creada exitosamente. ID:', venta.id);
+
+      res.status(201).json({
+        mensaje: 'Factura de venta importada exitosamente desde XML',
+        data: venta,
+        validacion: {
+          valido: resultado.validacion.valido,
+          metodo: resultado.validacion.metodo,
+          errores: resultado.validacion.errores,
+          advertencias: resultado.validacion.advertencias,
+          xsdDisponible: xmlImportService.xsdValidationAvailable
+        }
+      });
+    } catch (error) {
+      console.error('=== ERROR EN IMPORTACIÓN DE FACTURA DE VENTA ===');
+      console.error('Mensaje:', error.message);
+      console.error('Stack:', error.stack);
+
+      // Eliminar archivo en caso de error
+      if (req.file) {
+        try {
+          const fs = require('fs').promises;
+          await fs.unlink(req.file.path);
+          console.log('Archivo temporal eliminado:', req.file.path);
         } catch (unlinkError) {
           console.error('Error al eliminar archivo temporal:', unlinkError);
         }

@@ -26,7 +26,9 @@ import {
   PointOfSale as PointOfSaleIcon,
   Description as DescriptionIcon,
   UploadFile as UploadFileIcon,
+  CloudDownload as CloudDownloadIcon,
   Assessment as AssessmentIcon,
+  Percent as PercentIcon,
   AccountCircle,
   ExitToApp,
 } from '@mui/icons-material'
@@ -63,9 +65,11 @@ function Layout({ children }) {
     { text: 'Usuarios', icon: <PeopleIcon />, path: '/usuarios' },
     { text: 'Compras', icon: <ShoppingCartIcon />, path: '/compras' },
     { text: 'Ventas', icon: <PointOfSaleIcon />, path: '/ventas' },
+    { text: 'Importar Ventas SRI', icon: <CloudDownloadIcon />, path: '/importar-ventas-sri' },
     { text: 'Reportes', icon: <AssessmentIcon />, path: '/reportes' },
     { text: 'Importar XML', icon: <UploadFileIcon />, path: '/importar-xml' },
     { text: 'Generar ATS', icon: <DescriptionIcon />, path: '/generar-ats' },
+    { text: 'Códigos Retención', icon: <PercentIcon />, path: '/codigos-retencion' },
   ]
 
   const drawer = (

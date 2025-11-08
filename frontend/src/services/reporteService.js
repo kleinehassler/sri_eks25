@@ -1,6 +1,6 @@
 import axios from '../config/axios';
 
-const API_URL = '/api/reportes';
+const API_URL = '/reportes';
 
 const reporteService = {
   // Resumen general

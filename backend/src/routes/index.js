@@ -13,6 +13,7 @@ const xmlImportRoutes = require('./xmlImportRoutes');
 const reporteRoutes = require('./reporteRoutes');
 const reporteAvanzadoRoutes = require('./reporteAvanzadoRoutes');
 const atsRoutes = require('./atsRoutes');
+const codigoRetencionRoutes = require('./codigoRetencionRoutes');
 
 // Definir rutas principales
 router.use('/auth', authRoutes);
@@ -26,6 +27,7 @@ router.use('/xml', xmlImportRoutes);
 router.use('/reportes', reporteRoutes);
 router.use('/reportes-avanzados', reporteAvanzadoRoutes);
 router.use('/ats', atsRoutes);
+router.use('/codigos-retencion', codigoRetencionRoutes);
 
 // Ruta de health check
 router.get('/health', (req, res) => {

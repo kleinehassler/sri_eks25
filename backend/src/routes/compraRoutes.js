@@ -89,6 +89,32 @@ router.put(
 );
 
 /**
+ * @route POST /api/compras/validar-masivo
+ * @desc Validar múltiples compras en estado BORRADOR
+ * @access Private
+ */
+router.post(
+  '/validar-masivo',
+  authenticate,
+  authorize('ADMINISTRADOR_GENERAL', 'ADMINISTRADOR_EMPRESA', 'CONTADOR'),
+  compraController.validarMasivo
+);
+
+/**
+ * @route DELETE /api/compras/eliminar-anulados
+ * @desc Eliminar permanentemente todas las compras en estado ANULADO
+ * @access Private
+ * IMPORTANTE: Esta ruta debe estar ANTES de /:id para evitar que Express la interprete como un ID
+ */
+router.delete(
+  '/eliminar-anulados',
+  authenticate,
+  authorize('ADMINISTRADOR_GENERAL', 'ADMINISTRADOR_EMPRESA'),
+  logChanges('COMPRAS', 'compra'),
+  compraController.eliminarAnulados
+);
+
+/**
  * @route DELETE /api/compras/:id
  * @desc Eliminar (anular) compra
  * @access Private
@@ -131,31 +157,6 @@ router.patch(
   manejarErroresValidacion,
   logChanges('COMPRAS', 'compra'),
   compraController.agregarRetenciones
-);
-
-/**
- * @route POST /api/compras/validar-masivo
- * @desc Validar múltiples compras en estado BORRADOR
- * @access Private
- */
-router.post(
-  '/validar-masivo',
-  authenticate,
-  authorize('ADMINISTRADOR_GENERAL', 'ADMINISTRADOR_EMPRESA', 'CONTADOR'),
-  compraController.validarMasivo
-);
-
-/**
- * @route DELETE /api/compras/eliminar-anulados
- * @desc Eliminar permanentemente todas las compras en estado ANULADO
- * @access Private
- */
-router.delete(
-  '/eliminar-anulados',
-  authenticate,
-  authorize('ADMINISTRADOR_GENERAL', 'ADMINISTRADOR_EMPRESA'),
-  logChanges('COMPRAS', 'compra'),
-  compraController.eliminarAnulados
 );
 
 /**

@@ -633,13 +633,13 @@ class ReporteService {
         doc.fillColor('#FFFFFF');
 
         let xPosition = 55;
-        doc.text('Fecha', xPosition, yPosition + 5, { width: colWidths.fecha });
+        doc.text('Fecha', xPosition, yPosition + 5, { width: colWidths.fecha, align: 'left' });
         xPosition += colWidths.fecha;
-        doc.text('RUC', xPosition, yPosition + 5, { width: colWidths.ruc });
+        doc.text('RUC', xPosition, yPosition + 5, { width: colWidths.ruc, align: 'left' });
         xPosition += colWidths.ruc;
-        doc.text('Proveedor', xPosition, yPosition + 5, { width: colWidths.proveedor });
+        doc.text('Proveedor', xPosition, yPosition + 5, { width: colWidths.proveedor, align: 'left' });
         xPosition += colWidths.proveedor;
-        doc.text('Factura', xPosition, yPosition + 5, { width: colWidths.factura });
+        doc.text('Factura', xPosition, yPosition + 5, { width: colWidths.factura, align: 'left' });
         xPosition += colWidths.factura;
         doc.text('Base IVA', xPosition, yPosition + 5, { width: colWidths.baseIva, align: 'right' });
         xPosition += colWidths.baseIva;
@@ -647,7 +647,7 @@ class ReporteService {
         xPosition += colWidths.iva;
         doc.text('Total', xPosition, yPosition + 5, { width: colWidths.total, align: 'right' });
         xPosition += colWidths.total;
-        doc.text('Estado', xPosition, yPosition + 5, { width: colWidths.estado });
+        doc.text('Estado', xPosition, yPosition + 5, { width: colWidths.estado, align: 'left' });
 
         yPosition += 25;
         doc.font('Helvetica').fillColor('#000000');
@@ -670,7 +670,7 @@ class ReporteService {
             doc.rect(50, yPosition - 3, 750, 18).fillOpacity(0.1).fill('#D9E1F2').fillOpacity(1);
           }
 
-          doc.fontSize(7);
+          doc.fontSize(7).fillColor('#000000');
           doc.text(compra.fecha_emision || '', xPosition, yPosition, { width: colWidths.fecha });
           xPosition += colWidths.fecha;
           doc.text(compra.identificacion_proveedor || '', xPosition, yPosition, { width: colWidths.ruc });
@@ -755,13 +755,13 @@ class ReporteService {
         doc.fillColor('#FFFFFF');
 
         let xPosition = 55;
-        doc.text('Fecha', xPosition, yPosition + 5, { width: colWidths.fecha });
+        doc.text('Fecha', xPosition, yPosition + 5, { width: colWidths.fecha, align: 'left' });
         xPosition += colWidths.fecha;
-        doc.text('RUC', xPosition, yPosition + 5, { width: colWidths.ruc });
+        doc.text('RUC', xPosition, yPosition + 5, { width: colWidths.ruc, align: 'left' });
         xPosition += colWidths.ruc;
-        doc.text('Cliente', xPosition, yPosition + 5, { width: colWidths.cliente });
+        doc.text('Cliente', xPosition, yPosition + 5, { width: colWidths.cliente, align: 'left' });
         xPosition += colWidths.cliente;
-        doc.text('Factura', xPosition, yPosition + 5, { width: colWidths.factura });
+        doc.text('Factura', xPosition, yPosition + 5, { width: colWidths.factura, align: 'left' });
         xPosition += colWidths.factura;
         doc.text('Base IVA', xPosition, yPosition + 5, { width: colWidths.baseIva, align: 'right' });
         xPosition += colWidths.baseIva;
@@ -769,7 +769,7 @@ class ReporteService {
         xPosition += colWidths.iva;
         doc.text('Total', xPosition, yPosition + 5, { width: colWidths.total, align: 'right' });
         xPosition += colWidths.total;
-        doc.text('Estado', xPosition, yPosition + 5, { width: colWidths.estado });
+        doc.text('Estado', xPosition, yPosition + 5, { width: colWidths.estado, align: 'left' });
 
         yPosition += 25;
         doc.font('Helvetica').fillColor('#000000');
@@ -792,7 +792,7 @@ class ReporteService {
             doc.rect(50, yPosition - 3, 750, 18).fillOpacity(0.1).fill('#E2EFDA').fillOpacity(1);
           }
 
-          doc.fontSize(7);
+          doc.fontSize(7).fillColor('#000000');
           doc.text(venta.fecha_emision || '', xPosition, yPosition, { width: colWidths.fecha });
           xPosition += colWidths.fecha;
           doc.text(venta.identificacion_cliente || '', xPosition, yPosition, { width: colWidths.ruc });
@@ -1637,7 +1637,7 @@ class ReporteService {
         doc.on('error', reject);
 
         // Encabezado
-        doc.fontSize(16).font('Helvetica-Bold').fillColor('#0070C0')
+        doc.fontSize(16).font('Helvetica-Bold').fillColor('#000000')
           .text('Reporte de Compras por Proveedor', { align: 'center' });
 
         doc.moveDown();
@@ -1688,7 +1688,7 @@ class ReporteService {
             y += 20;
           }
 
-          doc.fontSize(8);
+          doc.fontSize(8).fillColor('#000000');
           doc.text(item.identificacion, 35, y + 4, { width: 90 });
           doc.text(item.razon_social, 135, y + 4, { width: 240 });
           doc.text(item.cantidad_compras.toString(), 385, y + 4, { width: 70 });
@@ -1701,7 +1701,7 @@ class ReporteService {
 
         // Totales
         y += 10;
-        doc.fontSize(10).font('Helvetica-Bold');
+        doc.fontSize(10).font('Helvetica-Bold').fillColor('#000000');
         const totalCompras = reporte.reduce((sum, item) => sum + item.total_compras, 0);
         const totalIVA = reporte.reduce((sum, item) => sum + item.total_iva, 0);
 

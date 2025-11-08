@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Crear instancia de axios con configuración base
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
         if (refreshToken) {
           // Intentar refrescar el token
           const response = await axios.post(
-            `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/auth/refresh-token`,
+            `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/auth/refresh-token`,
             { refreshToken }
           );
 

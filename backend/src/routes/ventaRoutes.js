@@ -1,8 +1,37 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 const ventaController = require('../controllers/ventaController');
+const ventaImportController = require('../controllers/ventaImportController');
 const { authenticate, authorize } = require('../middlewares/auth');
 const { logActivity } = require('../middlewares/logger');
+
+// Configuración de multer para subida de archivos .txt
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../../uploads/temp'));
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, `claves-acceso-${uniqueSuffix}.txt`);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB máximo
+  },
+  fileFilter: (req, file, cb) => {
+    // Aceptar solo archivos .txt
+    if (file.mimetype === 'text/plain' || path.extname(file.originalname).toLowerCase() === '.txt') {
+      cb(null, true);
+    } else {
+      cb(new Error('Solo se permiten archivos .txt'));
+    }
+  }
+});
 
 /**
  * @route GET /api/ventas
@@ -67,6 +96,20 @@ router.put(
 );
 
 /**
+ * @route DELETE /api/ventas/eliminar-anulados
+ * @desc Eliminar permanentemente todas las ventas en estado ANULADO
+ * @access Private
+ * IMPORTANTE: Esta ruta debe estar ANTES de /:id para evitar que Express la interprete como un ID
+ */
+router.delete(
+  '/eliminar-anulados',
+  authenticate,
+  authorize('ADMINISTRADOR_GENERAL', 'ADMINISTRADOR_EMPRESA'),
+  logActivity('ELIMINAR_VENTAS_ANULADAS', 'VENTAS'),
+  ventaController.eliminarAnulados
+);
+
+/**
  * @route DELETE /api/ventas/:id
  * @desc Eliminar (anular) venta
  * @access Private
@@ -106,16 +149,30 @@ router.patch(
 );
 
 /**
- * @route DELETE /api/ventas/eliminar-anulados
- * @desc Eliminar permanentemente todas las ventas en estado ANULADO
+ * @route POST /api/ventas/importar-desde-sri
+ * @desc Importar ventas masivamente desde archivo .txt con claves de acceso del SRI
  * @access Private
  */
-router.delete(
-  '/eliminar-anulados',
+router.post(
+  '/importar-desde-sri',
   authenticate,
-  authorize('ADMINISTRADOR_GENERAL', 'ADMINISTRADOR_EMPRESA'),
-  logActivity('ELIMINAR_VENTAS_ANULADAS', 'VENTAS'),
-  ventaController.eliminarAnulados
+  authorize('ADMINISTRADOR_GENERAL', 'ADMINISTRADOR_EMPRESA', 'CONTADOR', 'OPERADOR'),
+  upload.single('archivo'),
+  logActivity('IMPORTAR_VENTAS_SRI', 'VENTAS'),
+  ventaImportController.importarVentasDesdeArchivo
+);
+
+/**
+ * @route POST /api/ventas/importar-desde-sri/unica
+ * @desc Importar una única venta desde el SRI usando la clave de acceso
+ * @access Private
+ */
+router.post(
+  '/importar-desde-sri/unica',
+  authenticate,
+  authorize('ADMINISTRADOR_GENERAL', 'ADMINISTRADOR_EMPRESA', 'CONTADOR', 'OPERADOR'),
+  logActivity('IMPORTAR_VENTA_SRI', 'VENTAS'),
+  ventaImportController.importarVentaUnica
 );
 
 module.exports = router;

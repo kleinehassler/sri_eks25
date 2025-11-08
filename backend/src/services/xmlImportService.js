@@ -414,6 +414,144 @@ class XmlImportService {
   }
 
   /**
+   * Parsear XML de factura electrónica SRI para VENTA (emisor = empresa, comprador = cliente)
+   * @param {string} xmlContent - Contenido XML de la factura
+   * @returns {Object} Datos extraídos de la factura para venta
+   */
+  parsearFacturaVenta(xmlContent) {
+    try {
+      const parsed = this.parser.parse(xmlContent);
+
+      // El XML puede venir con o sin envoltorio de autorización
+      let factura = parsed.factura || parsed.Factura;
+
+      // Si viene con envoltorio de autorización, extraer el comprobante
+      if (!factura && parsed.autorizacion) {
+        const comprobanteStr = parsed.autorizacion.comprobante;
+        if (comprobanteStr) {
+          const comprobanteParsed = this.parser.parse(comprobanteStr);
+          factura = comprobanteParsed.factura || comprobanteParsed.Factura;
+        }
+      }
+
+      if (!factura) {
+        throw new AppError('El XML no corresponde a una factura electrónica válida', 400);
+      }
+
+      const infoTributaria = factura.infoTributaria;
+      const infoFactura = factura.infoFactura;
+      const detalles = factura.detalles?.detalle || [];
+
+      // Extraer información del CLIENTE (quien compra)
+      // En una VENTA, el cliente es el comprador del documento (infoFactura)
+      const datosCliente = {
+        tipo_identificacion_cliente: this.mapearTipoIdentificacion(infoFactura.tipoIdentificacionComprador),
+        identificacion_cliente: String(infoFactura.identificacionComprador || ''),
+        razon_social_cliente: String(infoFactura.razonSocialComprador || ''),
+      };
+
+      // Extraer información del comprobante (emitido por la empresa)
+      const datosComprobante = {
+        fecha_emision: this.convertirFecha(infoFactura.fechaEmision),
+        tipo_comprobante: '01', // Factura
+        // Formatear establecimiento y punto_emision con ceros a la izquierda (3 dígitos)
+        establecimiento: String(infoTributaria.estab || '').padStart(3, '0'),
+        punto_emision: String(infoTributaria.ptoEmi || '').padStart(3, '0'),
+        secuencial: String(infoTributaria.secuencial || '').padStart(9, '0'),
+        // IMPORTANTE: Convertir explícitamente a String para mantener los 49 dígitos
+        numero_autorizacion: String(infoTributaria.claveAcceso || parsed.autorizacion?.numeroAutorizacion || ''),
+        total_venta: parseFloat(infoFactura.importeTotal || 0)
+      };
+
+      // Calcular bases imponibles y impuestos
+      const impuestos = this.calcularImpuestos(infoFactura.totalConImpuestos?.totalImpuesto || []);
+
+      // Extraer forma de pago (si existe)
+      const pagos = factura.pagos?.pago;
+      let formaPago = null;
+      if (pagos) {
+        const pagoArray = Array.isArray(pagos) ? pagos : [pagos];
+        if (pagoArray.length > 0 && pagoArray[0].formaPago) {
+          formaPago = String(pagoArray[0].formaPago).padStart(2, '0');
+        }
+      }
+
+      return {
+        ...datosCliente,
+        ...datosComprobante,
+        ...impuestos,
+        forma_pago: formaPago,
+        xml_original: xmlContent
+      };
+    } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
+      throw new AppError(`Error al parsear XML de factura para venta: ${error.message}`, 400);
+    }
+  }
+
+  /**
+   * Parsear y validar XML de factura de venta con validación XSD
+   * @param {string} xmlContent - Contenido XML de la factura
+   * @param {boolean} validarXSD - Si se debe realizar validación XSD (default: true)
+   * @returns {Promise<Object>} Datos extraídos y resultado de validación
+   */
+  async parsearYValidarFacturaVenta(xmlContent, validarXSD = true) {
+    let resultadoValidacion = {
+      valido: true,
+      errores: [],
+      advertencias: [],
+      metodo: 'sin validación XSD',
+      mensaje: 'XML procesado sin validación XSD'
+    };
+
+    // Validar contra XSD si está habilitado
+    if (validarXSD) {
+      resultadoValidacion = await this.validarContraXSD(xmlContent);
+
+      // Si hay errores críticos de XSD, no continuar con el parseo
+      if (!resultadoValidacion.valido && resultadoValidacion.errores.length > 0) {
+        const erroresCriticos = resultadoValidacion.errores.filter(e =>
+          e.tipo === 'XSD_VALIDATION' || e.tipo === 'SINTAXIS'
+        );
+
+        if (erroresCriticos.length > 0) {
+          return {
+            datos: null,
+            validacion: resultadoValidacion,
+            parseado: false
+          };
+        }
+      }
+    }
+
+    // Parsear los datos
+    try {
+      const datos = this.parsearFacturaVenta(xmlContent);
+
+      return {
+        datos,
+        validacion: resultadoValidacion,
+        parseado: true
+      };
+    } catch (error) {
+      // Error en el parseo
+      resultadoValidacion.errores.push({
+        tipo: 'ERROR_PARSEO',
+        mensaje: 'Error al extraer datos del XML',
+        detalle: error.message
+      });
+
+      return {
+        datos: null,
+        validacion: resultadoValidacion,
+        parseado: false
+      };
+    }
+  }
+
+  /**
    * Detectar tipo de comprobante del XML
    * @param {string} xmlContent - Contenido XML
    * @returns {string} 'FACTURA' | 'RETENCION' | 'DESCONOCIDO'

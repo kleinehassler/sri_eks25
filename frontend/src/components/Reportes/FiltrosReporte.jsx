@@ -20,9 +20,14 @@ function FiltrosReporte({ onAplicarFiltros, onExportar, mostrarExportar = true, 
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
   const currentYear = currentDate.getFullYear().toString();
 
+  // Calcular primer y último día del mes actual
+  const primerDiaMes = `${currentYear}-${currentMonth}-01`;
+  const ultimoDiaMes = new Date(currentYear, currentDate.getMonth() + 1, 0).toISOString().split('T')[0];
+
   const [filtros, setFiltros] = useState({
-    periodoInicio: `${currentMonth}/${currentYear}`,
-    periodoFin: `${currentMonth}/${currentYear}`,
+    periodo: `${currentMonth}/${currentYear}`,
+    fecha_desde: primerDiaMes,
+    fecha_hasta: ultimoDiaMes,
     estado: '',
     busqueda: ''
   });
@@ -40,8 +45,9 @@ function FiltrosReporte({ onAplicarFiltros, onExportar, mostrarExportar = true, 
 
   const handleLimpiar = () => {
     const filtrosLimpios = {
-      periodoInicio: `${currentMonth}/${currentYear}`,
-      periodoFin: `${currentMonth}/${currentYear}`,
+      periodo: `${currentMonth}/${currentYear}`,
+      fecha_desde: primerDiaMes,
+      fecha_hasta: ultimoDiaMes,
       estado: '',
       busqueda: ''
     };
@@ -62,34 +68,47 @@ function FiltrosReporte({ onAplicarFiltros, onExportar, mostrarExportar = true, 
       </Typography>
 
       <Grid container spacing={2} sx={{ mb: 2 }}>
-        {/* Periodo Inicio */}
-        <Grid item xs={12} sm={6} md={3}>
+        {/* Periodo */}
+        <Grid item xs={12} sm={6} md={2}>
           <TextField
             fullWidth
             size="small"
-            label="Periodo Inicio"
+            label="Periodo"
             placeholder="MM/YYYY"
-            value={filtros.periodoInicio}
-            onChange={(e) => handleChange('periodoInicio', e.target.value)}
+            value={filtros.periodo}
+            onChange={(e) => handleChange('periodo', e.target.value)}
             helperText="Formato: MM/YYYY"
           />
         </Grid>
 
-        {/* Periodo Fin */}
-        <Grid item xs={12} sm={6} md={3}>
+        {/* Fecha Desde */}
+        <Grid item xs={12} sm={6} md={2.5}>
           <TextField
             fullWidth
             size="small"
-            label="Periodo Fin"
-            placeholder="MM/YYYY"
-            value={filtros.periodoFin}
-            onChange={(e) => handleChange('periodoFin', e.target.value)}
-            helperText="Formato: MM/YYYY"
+            type="date"
+            label="Fecha Desde"
+            value={filtros.fecha_desde}
+            onChange={(e) => handleChange('fecha_desde', e.target.value)}
+            InputLabelProps={{ shrink: true }}
+          />
+        </Grid>
+
+        {/* Fecha Hasta */}
+        <Grid item xs={12} sm={6} md={2.5}>
+          <TextField
+            fullWidth
+            size="small"
+            type="date"
+            label="Fecha Hasta"
+            value={filtros.fecha_hasta}
+            onChange={(e) => handleChange('fecha_hasta', e.target.value)}
+            InputLabelProps={{ shrink: true }}
           />
         </Grid>
 
         {/* Estado */}
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={2.5}>
           <FormControl fullWidth size="small">
             <InputLabel>Estado</InputLabel>
             <Select
@@ -107,7 +126,7 @@ function FiltrosReporte({ onAplicarFiltros, onExportar, mostrarExportar = true, 
         </Grid>
 
         {/* Búsqueda */}
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={2.5}>
           <TextField
             fullWidth
             size="small"

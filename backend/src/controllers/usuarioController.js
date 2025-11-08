@@ -10,13 +10,25 @@ class UsuarioController {
   async obtenerTodos(req, res, next) {
     try {
       const { empresa_id, rol, estado, busqueda, pagina, limite } = req.query;
+      const usuarioAutenticado = req.usuario;
 
       const filtros = {
-        empresa_id,
         rol,
         estado,
         busqueda
       };
+
+      // Solo el ADMINISTRADOR_GENERAL puede ver todos los usuarios
+      // Los demás roles solo pueden ver usuarios de su propia empresa
+      if (usuarioAutenticado.rol !== 'ADMINISTRADOR_GENERAL') {
+        // Forzar filtro por empresa del usuario autenticado
+        filtros.empresa_id = usuarioAutenticado.empresa_id;
+      } else {
+        // ADMINISTRADOR_GENERAL puede filtrar por empresa si lo desea
+        if (empresa_id) {
+          filtros.empresa_id = empresa_id;
+        }
+      }
 
       const resultado = await usuarioService.obtenerTodos(
         filtros,

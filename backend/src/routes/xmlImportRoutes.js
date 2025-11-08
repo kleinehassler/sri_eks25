@@ -33,6 +33,20 @@ router.post(
 );
 
 /**
+ * @route POST /api/xml/importar-factura-venta
+ * @desc Importar factura de venta desde XML electrónico
+ * @access Private
+ */
+router.post(
+  '/importar-factura-venta',
+  xmlImportController.uploadMiddleware,
+  authenticate,
+  authorize('ADMINISTRADOR_GENERAL', 'ADMINISTRADOR_EMPRESA', 'CONTADOR', 'OPERADOR'),
+  logActivity('IMPORTAR_XML_FACTURA_VENTA', 'XML_IMPORT'),
+  xmlImportController.importarFacturaVenta
+);
+
+/**
  * @route POST /api/xml/previsualizar
  * @desc Previsualizar datos del XML sin guardar
  * @access Private

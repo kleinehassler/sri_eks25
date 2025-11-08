@@ -42,7 +42,7 @@ function Reportes() {
 
       switch (tabValue) {
         case 0: // Resumen General
-          setPeriodoResumen(filtros.periodoInicio || filtros.periodo);
+          setPeriodoResumen(filtros.periodo);
           break;
 
         case 1: // Reporte de Compras

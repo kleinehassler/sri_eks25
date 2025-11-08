@@ -1,6 +1,6 @@
 import axios from '../config/axios';
 
-const API_URL = '/api/usuarios';
+const API_URL = '/usuarios';
 
 const usuarioService = {
   // Obtener todos los usuarios con filtros opcionales

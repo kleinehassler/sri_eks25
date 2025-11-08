@@ -38,7 +38,12 @@
       "Bash(if not exist \"C:\\CODELLM_WorkSpace\\sri_eks25\\backend\\uploads\\xml\" mkdir \"C:\\CODELLM_WorkSpace\\sri_eks25\\backend\\uploads\\xml\")",
       "Bash(powershell -Command \"Stop-Process -Id 11572 -Force\")",
       "Bash(timeout /t 3)",
-      "Bash(powershell -Command \"Stop-Process -Id 2420 -Force\")"
+      "Bash(powershell -Command \"Stop-Process -Id 2420 -Force\")",
+      "Bash(if not exist \"C:\\CODELLM_WorkSpace\\sri_eks25\\backend\\uploads\\temp\" mkdir \"C:\\CODELLM_WorkSpace\\sri_eks25\\backend\\uploads\\temp\")",
+      "Bash(node test-sri-import.js:*)",
+      "Bash(node test-ats-generation.js:*)",
+      "Bash(node compare-xml.js)",
+      "Bash(npm run migrate:*)"
     ],
     "deny": [],
     "ask": []

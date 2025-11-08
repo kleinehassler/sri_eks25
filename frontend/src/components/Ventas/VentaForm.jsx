@@ -66,7 +66,7 @@ function VentaForm({ open, onClose, onSubmit, initialValues, mode = 'create' }) 
     initialValues: initialValues || {
       periodo: '',
       tipo_comprobante: '01',
-      tipo_identificacion_cliente: '04',
+      tipo_identificacion_cliente: '01',
       identificacion_cliente: '',
       razon_social_cliente: '',
       fecha_emision: '',
@@ -188,10 +188,11 @@ function VentaForm({ open, onClose, onSubmit, initialValues, mode = 'create' }) 
                   onChange={formik.handleChange}
                   error={formik.touched.tipo_identificacion_cliente && Boolean(formik.errors.tipo_identificacion_cliente)}
                 >
-                  <MenuItem value="04">RUC</MenuItem>
-                  <MenuItem value="05">Cédula</MenuItem>
-                  <MenuItem value="06">Pasaporte</MenuItem>
-                  <MenuItem value="07">Consumidor Final</MenuItem>
+                  <MenuItem value="01">01 - RUC</MenuItem>
+                  <MenuItem value="02">02 - Cédula</MenuItem>
+                  <MenuItem value="03">03 - Pasaporte</MenuItem>
+                  <MenuItem value="07">07 - Consumidor Final</MenuItem>
+                  <MenuItem value="08">08 - Identificación del Exterior</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

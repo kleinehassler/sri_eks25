@@ -15,8 +15,7 @@ class AtsGeneratorService {
     this.builder = new XMLBuilder({
       ignoreAttributes: false,
       attributeNamePrefix: '@_',
-      format: true,
-      indentBy: '  ',
+      format: false,
       suppressEmptyNode: true,
       tagValueProcessor: (tagName, tagValue) => {
         // Asegurar que valores numéricos largos se mantengan como strings
@@ -70,7 +69,7 @@ class AtsGeneratorService {
 
       // Escribir XML
       const xmlContent = this.builder.build(atsXml);
-      const xmlCompleto = `<?xml version="1.0" encoding="UTF-8"?>\n${xmlContent}`;
+      const xmlCompleto = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>${xmlContent}`;
       await fs.writeFile(rutaXml, xmlCompleto, 'utf-8');
 
       // Validar XML contra esquema XSD del SRI
@@ -152,13 +151,12 @@ class AtsGeneratorService {
 
     const ats = {
       iva: {
-        '@_xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
         TipoIDInformante: this.determinarTipoId(empresa.ruc),
         IdInformante: String(empresa.ruc),
         razonSocial: this.formatearRazonSocial(empresa.razon_social),
         Anio: String(anio),
         Mes: String(mes).padStart(2, '0'),
-        numEstabRuc: '001', // Ajustar según establecimiento principal
+        numEstabRuc: this.contarEstablecimientosUnicos(ventas),
         totalVentas: this.calcularTotalVentas(ventas, exportaciones),
         codigoOperativo: 'IVA'
       }
@@ -230,42 +228,39 @@ class AtsGeneratorService {
     });
 
     const detalleCompra = {
-      codSustento: String(compra.codigo_sustento || ''),
-      tpIdProv: String(compra.tipo_identificacion || ''),
+      codSustento: String(compra.codigo_sustento || '01'),
+      tpIdProv: String(compra.tipo_identificacion || '01'),
       idProv: String(compra.identificacion_proveedor || ''),
-      tipoComprobante: String(compra.tipo_comprobante || ''),
+      tipoComprobante: String(compra.tipo_comprobante || '01'),
       parteRel: 'NO',
       fechaRegistro: this.formatearFecha(compra.fecha_registro),
-      establecimiento: String(compra.establecimiento || ''),
-      puntoEmision: String(compra.punto_emision || ''),
-      secuencial: parseInt(compra.secuencial || '0'),  // INTEGER según XSD
+      establecimiento: String(compra.establecimiento || '').padStart(3, '0'),
+      puntoEmision: String(compra.punto_emision || '').padStart(3, '0'),
+      secuencial: parseInt(compra.secuencial || '0'),
       fechaEmision: this.formatearFecha(compra.fecha_emision),
       autorizacion: this.formatearAutorizacion(compra.numero_autorizacion),
-      baseNoGraIva: this.formatearDecimal(compra.base_imponible_0),  // Base tarifa 0%
-      baseImponible: this.formatearDecimal(compra.base_imponible_iva),  // Base gravada IVA
-      baseImpGrav: this.formatearDecimal(compra.base_imponible_iva),  // Base gravada IVA (mismo valor)
-      baseImpExe: this.formatearDecimal(compra.base_imponible_exento_iva),  // Base exenta
+      baseNoGraIva: this.formatearDecimal(compra.base_imponible_0),
+      baseImponible: this.formatearDecimal(compra.base_imponible_no_objeto_iva),
+      baseImpGrav: this.formatearDecimal(compra.base_imponible_iva),
+      baseImpExe: this.formatearDecimal(compra.base_imponible_exento_iva),
       montoIce: this.formatearDecimal(compra.monto_ice),
       montoIva: this.formatearDecimal(compra.monto_iva),
-      valRetBien10: this.formatearDecimal(valRetBien10),  // Retención IVA 10%
-      valRetServ20: this.formatearDecimal(valRetServ20),  // Retención IVA 20%
-      valorRetBienes: this.formatearDecimal(valRetBien10),  // Total retención bienes
-      valRetServ50: this.formatearDecimal(valRetServ50),  // Retención IVA 50%
-      valorRetServicios: this.formatearDecimal(valRetServ20 + valRetServ50),  // Total retención servicios
-      valRetServ100: this.formatearDecimal(valRetServ100),  // Retención IVA 100%
+      valRetBien10: this.formatearDecimal(valRetBien10),
+      valRetServ20: this.formatearDecimal(valRetServ20),
+      valorRetBienes: this.formatearDecimal(valRetBien10),
+      valRetServ50: this.formatearDecimal(valRetServ50),
+      valorRetServicios: this.formatearDecimal(valRetServ20 + valRetServ50),
+      valRetServ100: this.formatearDecimal(valRetServ100),
       totbasesImpReemb: '0.00'
     };
 
-    // Agregar pago al exterior si aplica
-    if (compra.pago_exterior_pais_efect_pago) {
-      detalleCompra.pagoExterior = {
-        pagoLocExt: '02',
-        tipoRegi: '01',
-        paisEfecPago: String(compra.pago_exterior_pais_efect_pago),
-        aplicConvDobTrib: compra.aplica_convenio_doble_imposicion ? 'SI' : 'NO',
-        pagExtSujRetNorLeg: 'NA'
-      };
-    }
+    // Agregar pagoExterior (siempre se incluye según el ejemplo del SRI)
+    detalleCompra.pagoExterior = {
+      pagoLocExt: compra.pago_exterior_pais_efect_pago ? '02' : '01',
+      paisEfecPago: compra.pago_exterior_pais_efect_pago ? String(compra.pago_exterior_pais_efect_pago) : 'NA',
+      aplicConvDobTrib: compra.aplica_convenio_doble_imposicion ? 'SI' : 'NA',
+      pagExtSujRetNorLeg: 'NA'
+    };
 
     // Agregar forma de pago si está disponible
     if (compra.forma_pago) {
@@ -288,9 +283,9 @@ class AtsGeneratorService {
 
       // Agregar datos de la retención emitida (si existe la primera retención)
       const primeraRetencion = retencionesCompra[0];
-      detalleCompra.estabRetencion1 = String(primeraRetencion.establecimiento);
-      detalleCompra.ptoEmiRetencion1 = String(primeraRetencion.punto_emision);
-      detalleCompra.secRetencion1 = parseInt(primeraRetencion.secuencial || '0');  // INTEGER según XSD
+      detalleCompra.estabRetencion1 = String(primeraRetencion.establecimiento || '').padStart(3, '0');
+      detalleCompra.ptoEmiRetencion1 = String(primeraRetencion.punto_emision || '').padStart(3, '0');
+      detalleCompra.secRetencion1 = parseInt(primeraRetencion.secuencial || '0');
       detalleCompra.autRetencion1 = this.formatearAutorizacion(primeraRetencion.numero_autorizacion);
       detalleCompra.fechaEmiRet1 = this.formatearFecha(primeraRetencion.fecha_emision);
     }
@@ -346,12 +341,19 @@ class AtsGeneratorService {
    * Acepta tanto ventas individuales como ventas agrupadas
    */
   mapearVenta(venta) {
+    // Mapear código de tipo de comprobante según especificaciones del SRI para ventas
+    // 01 (Factura) -> 18 (Factura para ventas en ATS)
+    let tipoComprobante = String(venta.tipo_comprobante || '');
+    if (tipoComprobante === '01') {
+      tipoComprobante = '18';
+    }
+
     const detalleVenta = {
       tpIdCliente: String(venta.tipo_identificacion_cliente || ''),
       idCliente: String(venta.identificacion_cliente || ''),
       parteRelVtas: 'NO',
-      tipoComprobante: String(venta.tipo_comprobante || ''),
-      tipoEmision: 'E', // Electrónica
+      tipoComprobante: tipoComprobante,
+      tipoEmision: venta.tipo_emision || 'E', // E=Electrónica, F=Física
       numeroComprobantes: venta.numeroComprobantes || 1,
       baseNoGraIva: this.formatearDecimal(venta.base_imponible_0),
       baseImponible: this.formatearDecimal(venta.base_imponible_iva),
@@ -376,19 +378,27 @@ class AtsGeneratorService {
    * Mapear exportación al formato XML ATS
    */
   mapearExportacion(exportacion) {
+    // Mapear código de tipo de comprobante según especificaciones del SRI para exportaciones
+    // 01 (Factura) -> 18 (Factura para exportaciones en ATS)
+    let tipoComprobante = String(exportacion.tipo_comprobante || '');
+    if (tipoComprobante === '01') {
+      tipoComprobante = '18';
+    }
+
     const detalleExportacion = {
       tpIdClienteEx: String(exportacion.tipo_identificacion || ''),
       idClienteEx: String(exportacion.identificacion_cliente || ''),
       parteRelExp: 'NO',
-      tipoComprobante: String(exportacion.tipo_comprobante || ''),
+      tipoComprobante: tipoComprobante,
+      tipoEmision: exportacion.tipo_emision || 'E', // E=Electrónica, F=Física
       tipoRegi: exportacion.tipo_regimen_fiscal || '01',
       paisEfecExp: String(exportacion.pais_destino || ''),
-      exportacionDe: '01', // Por defecto: Exportación definitiva
+      exportacionDe: '01',
       valorFOB: this.formatearDecimal(exportacion.valor_fob_comprobante),
       valorFOBComprobante: this.formatearDecimal(exportacion.valor_fob_comprobante),
-      establecimiento: String(exportacion.establecimiento || ''),
-      puntoEmision: String(exportacion.punto_emision || ''),
-      secuencial: parseInt(exportacion.secuencial || '0'),  // INTEGER según XSD
+      establecimiento: String(exportacion.establecimiento || '').padStart(3, '0'),
+      puntoEmision: String(exportacion.punto_emision || '').padStart(3, '0'),
+      secuencial: parseInt(exportacion.secuencial || '0'),
       autorizacion: this.formatearAutorizacion(exportacion.numero_autorizacion),
       fechaEmision: this.formatearFecha(exportacion.fecha_emision)
     };
@@ -406,25 +416,35 @@ class AtsGeneratorService {
    */
   construirVentasEstablecimiento(ventas) {
     // Agrupar ventas por establecimiento
+    // Solo incluir ventas que NO son electrónicas (tipo_emision !== 'E')
     const ventasPorEstablecimiento = {};
 
+    // Primero, obtener todos los establecimientos únicos de TODAS las ventas
+    const establecimientosUnicos = new Set();
     ventas.forEach(venta => {
       const estab = venta.establecimiento || '001';
-      if (!ventasPorEstablecimiento[estab]) {
-        ventasPorEstablecimiento[estab] = {
-          totalVentas: 0,
-          totalIva: 0
-        };
-      }
-      ventasPorEstablecimiento[estab].totalVentas += parseFloat(venta.total_venta || 0);
-      ventasPorEstablecimiento[estab].totalIva += parseFloat(venta.monto_iva || 0);
+      establecimientosUnicos.add(estab);
     });
+
+    // Inicializar todos los establecimientos con 0
+    establecimientosUnicos.forEach(estab => {
+      ventasPorEstablecimiento[estab] = {
+        totalVentas: 0
+      };
+    });
+
+    // Sumar solo las ventas NO electrónicas
+    ventas
+      .filter(venta => venta.tipo_emision !== 'E')
+      .forEach(venta => {
+        const estab = venta.establecimiento || '001';
+        ventasPorEstablecimiento[estab].totalVentas += parseFloat(venta.total_venta || 0);
+      });
 
     // Convertir a array para el XML
     const ventasEstab = Object.keys(ventasPorEstablecimiento).map(codEstab => ({
       codEstab: String(codEstab).padStart(3, '0'),
-      ventasEstab: this.formatearDecimal(ventasPorEstablecimiento[codEstab].totalVentas),
-      ivaComp: this.formatearDecimal(ventasPorEstablecimiento[codEstab].totalIva)
+      ventasEstab: this.formatearDecimal(ventasPorEstablecimiento[codEstab].totalVentas)
     }));
 
     return { ventaEst: ventasEstab };
@@ -571,11 +591,40 @@ class AtsGeneratorService {
   }
 
   /**
+   * Contar establecimientos únicos de las ventas
+   */
+  contarEstablecimientosUnicos(ventas) {
+    // Si no hay ventas, retornar 000
+    if (!ventas || ventas.length === 0) {
+      return '000';
+    }
+
+    // Obtener establecimientos únicos de TODAS las ventas (físicas y electrónicas)
+    const establecimientosUnicos = new Set();
+
+    ventas.forEach(venta => {
+      const establecimiento = venta.establecimiento || '001';
+      establecimientosUnicos.add(establecimiento);
+    });
+
+    // Retornar el número de establecimientos únicos con padding de 3 caracteres
+    return String(establecimientosUnicos.size).padStart(3, '0');
+  }
+
+  /**
    * Calcular total de ventas
    */
   calcularTotalVentas(ventas, exportaciones) {
-    const totalVentas = ventas.reduce((sum, v) => sum + parseFloat(v.total_venta || 0), 0);
-    const totalExportaciones = exportaciones.reduce((sum, e) => sum + parseFloat(e.valor_fob_comprobante || 0), 0);
+    // Solo sumar ventas que NO son electrónicas (tipo_emision !== 'E')
+    const totalVentas = ventas
+      .filter(v => v.tipo_emision !== 'E')
+      .reduce((sum, v) => sum + parseFloat(v.total_venta || 0), 0);
+
+    // Las exportaciones también solo si no son electrónicas
+    const totalExportaciones = exportaciones
+      .filter(e => e.tipo_emision !== 'E')
+      .reduce((sum, e) => sum + parseFloat(e.valor_fob_comprobante || 0), 0);
+
     return this.formatearDecimal(totalVentas + totalExportaciones);
   }
 

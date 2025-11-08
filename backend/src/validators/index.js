@@ -26,6 +26,7 @@ const usuarioValidator = require('./usuarioValidator');
 const compraValidator = require('./compraValidator');
 const retencionValidator = require('./retencionValidator');
 const exportacionValidator = require('./exportacionValidator');
+const codigoRetencionValidator = require('./codigoRetencionValidator');
 
 module.exports = {
   manejarErroresValidacion,
@@ -33,5 +34,6 @@ module.exports = {
   usuarioValidator,
   compraValidator,
   retencionValidator,
-  exportacionValidator
+  exportacionValidator,
+  codigoRetencionValidator
 };

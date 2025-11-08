@@ -12,7 +12,9 @@ import Compras from './pages/Compras'
 import Ventas from './pages/Ventas'
 import GenerarATS from './pages/GenerarATS'
 import ImportarXML from './pages/ImportarXML'
+import ImportarVentasSRIPage from './pages/ImportarVentasSRIPage'
 import Reportes from './pages/Reportes'
+import CodigosRetencion from './pages/CodigosRetencion'
 
 // Layout
 import Layout from './components/Layout/Layout'
@@ -111,10 +113,26 @@ function App() {
           }
         />
         <Route
+          path="/importar-ventas-sri"
+          element={
+            <ProtectedRoute>
+              <ImportarVentasSRIPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/reportes"
           element={
             <ProtectedRoute>
               <Reportes />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/codigos-retencion"
+          element={
+            <ProtectedRoute>
+              <CodigosRetencion />
             </ProtectedRoute>
           }
         />

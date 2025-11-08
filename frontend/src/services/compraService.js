@@ -1,6 +1,6 @@
 import axios from '../config/axios';
 
-const API_URL = '/api/compras';
+const API_URL = '/compras';
 
 const compraService = {
   // Obtener todas las compras con filtros opcionales
@@ -49,7 +49,18 @@ const compraService = {
       const response = await axios.post(API_URL, compraData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      // Extraer el mensaje de error del backend
+      const errorData = error.response?.data;
+      if (errorData) {
+        // Si hay detalles de validación, construir un mensaje más descriptivo
+        if (errorData.detalles && Array.isArray(errorData.detalles)) {
+          const mensajesDetalle = errorData.detalles.map(d => `${d.campo}: ${d.mensaje}`).join(', ');
+          throw new Error(`${errorData.error || errorData.mensaje || 'Error de validación'}: ${mensajesDetalle}`);
+        }
+        // Si no hay detalles, usar el mensaje principal
+        throw new Error(errorData.error || errorData.mensaje || 'Error al crear la compra');
+      }
+      throw new Error(error.message || 'Error al crear la compra');
     }
   },
 
@@ -59,7 +70,18 @@ const compraService = {
       const response = await axios.put(`${API_URL}/${id}`, compraData);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      // Extraer el mensaje de error del backend
+      const errorData = error.response?.data;
+      if (errorData) {
+        // Si hay detalles de validación, construir un mensaje más descriptivo
+        if (errorData.detalles && Array.isArray(errorData.detalles)) {
+          const mensajesDetalle = errorData.detalles.map(d => `${d.campo}: ${d.mensaje}`).join(', ');
+          throw new Error(`${errorData.error || errorData.mensaje || 'Error de validación'}: ${mensajesDetalle}`);
+        }
+        // Si no hay detalles, usar el mensaje principal
+        throw new Error(errorData.error || errorData.mensaje || 'Error al actualizar la compra');
+      }
+      throw new Error(error.message || 'Error al actualizar la compra');
     }
   },
 
@@ -111,7 +133,18 @@ const compraService = {
       const response = await axios.delete(`${API_URL}/eliminar-anulados?${params.toString()}`);
       return response.data;
     } catch (error) {
-      throw error.response?.data || error.message;
+      // Extraer el mensaje de error del backend
+      const errorData = error.response?.data;
+      if (errorData) {
+        // Si hay detalles de validación, construir un mensaje más descriptivo
+        if (errorData.detalles && Array.isArray(errorData.detalles)) {
+          const mensajesDetalle = errorData.detalles.map(d => `${d.campo}: ${d.mensaje}`).join(', ');
+          throw new Error(`${errorData.error || errorData.mensaje || 'Error al eliminar'}: ${mensajesDetalle}`);
+        }
+        // Si no hay detalles, usar el mensaje principal
+        throw new Error(errorData.error || errorData.mensaje || 'Error al eliminar las compras anuladas');
+      }
+      throw new Error(error.message || 'Error al eliminar las compras anuladas');
     }
   }
 };
