@@ -17,8 +17,13 @@ export default defineConfig({
   preview: {
     port: 80,
     host: '0.0.0.0',
-    // Permitir todos los hosts (necesario para Seenode)
-    allowedHosts: 'all'
+    strictPort: false,
+    // Permitir todos los hosts de Seenode usando comodines
+    allowedHosts: [
+      '.seenode.com',
+      '.run-on-seenode.com',
+      'web-qpoc0u8vxvts.up-de-fra1-k8s-1.apps.run-on-seenode.com'
+    ]
   },
   build: {
     outDir: 'dist',
