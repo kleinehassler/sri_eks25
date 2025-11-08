@@ -2,18 +2,17 @@ require('dotenv').config();
 const app = require('./app');
 
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
 
-const server = app.listen(PORT, HOST, () => {
+const server = app.listen(PORT, () => {
   console.log('');
   console.log('═══════════════════════════════════════════════════════');
   console.log('  Sistema ATS - SRI Ecuador');
   console.log('═══════════════════════════════════════════════════════');
-  console.log(`  Servidor ejecutándose en ${HOST}:${PORT}`);
+  console.log(`  Servidor ejecutándose en puerto ${PORT}`);
   console.log(`  Ambiente: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`  URL: http://${HOST}:${PORT}`);
-  console.log(`  API: http://${HOST}:${PORT}/api`);
-  console.log(`  Health: http://${HOST}:${PORT}/api/health`);
+  console.log(`  URL: http://localhost:${PORT}`);
+  console.log(`  API: http://localhost:${PORT}/api`);
+  console.log(`  Health: http://localhost:${PORT}/api/health`);
   console.log('═══════════════════════════════════════════════════════');
   console.log('');
 });

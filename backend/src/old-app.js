@@ -11,10 +11,9 @@ const app = express();
 // Middlewares de seguridad
 app.use(helmet());
 
-// CORS - Configuración para producción
-const corsOrigin = process.env.CORS_ORIGIN || process.env.FRONTEND_URL || 'http://localhost:5173';
+// CORS
 app.use(cors({
-  origin: corsOrigin === '*' ? '*' : corsOrigin.split(','),
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true
 }));
 
@@ -38,8 +37,7 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     descripcion: 'Sistema multi-empresa para generación de Anexo Transaccional Simplificado',
     documentacion: '/api/health',
-    estado: 'activo',
-    timestamp: new Date().toISOString()
+    estado: 'activo'
   });
 });
 
@@ -54,8 +52,6 @@ const inicializarDB = async () => {
   try {
     await sequelize.authenticate();
     console.log('✓ Conexión a MySQL establecida correctamente');
-    console.log(`✓ Base de datos: ${process.env.DB_NAME}`);
-    console.log(`✓ Host: ${process.env.DB_HOST}:${process.env.DB_PORT}`);
 
     if (process.env.NODE_ENV === 'development') {
       // Importar modelos para inicializar asociaciones
@@ -68,13 +64,8 @@ const inicializarDB = async () => {
     }
   } catch (error) {
     console.error('✗ Error al conectar con MySQL:', error.message);
-    console.error('Verifica las credenciales de la base de datos en las variables de entorno');
-    // En producción, no salir inmediatamente para dar tiempo a revisar logs
-    if (process.env.NODE_ENV === 'production') {
-      console.error('⚠️  El servidor continuará ejecutándose pero sin conexión a BD');
-    } else {
-      process.exit(1);
-    }
+    console.error('Verifica que MySQL esté corriendo y las credenciales en .env sean correctas');
+    process.exit(1);
   }
 };
 
