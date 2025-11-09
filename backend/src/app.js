@@ -83,5 +83,4 @@ if (process.env.NODE_ENV !== 'test') {
   inicializarDB();
 }
 
-// exports
 module.exports = app;
