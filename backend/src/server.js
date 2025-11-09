@@ -6,9 +6,9 @@ const HOST = process.env.HOST || '0.0.0.0';
 
 const server = app.listen(PORT, HOST, () => {
   console.log('');
-  console.log('═══════════════════════════════════════════════════════');
+  console.log('═══════════════════════════*═══════════════════════════');
   console.log('  Sistema ATS - SRI Ecuador');
-  console.log('═══════════════════════════════════════════════════════');
+  console.log('═══════════════════════════*═══════════════════════════');
   console.log(`  Servidor ejecutándose en ${HOST}:${PORT}`);
   console.log(`  Ambiente: ${process.env.NODE_ENV || 'development'}`);
   console.log(`  URL: http://${HOST}:${PORT}`);
@@ -45,6 +45,5 @@ process.on('SIGINT', () => {
     process.exit(0);
   });
 });
-
 
 module.exports = server;
