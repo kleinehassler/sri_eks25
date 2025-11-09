@@ -13,6 +13,8 @@ docum/
 backend/.env
 frontend/.env
 
+
+
 # Logs
 logs
 *.log
@@ -23,6 +25,10 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Build outputs
+claude/
+docum/
+.claude
+
 dist/
 dist-ssr/
 build/
