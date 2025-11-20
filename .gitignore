@@ -25,7 +25,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Build outputs
-claude/
+.claude/
 docum/
 .claude
 
@@ -58,3 +58,27 @@ coverage/
 # Database
 *.sqlite
 *.db
+
+# Docker
+.env.docker
+mysql_data/
+
+# Backups
+backups/
+*.sql.gz
+*.sql.backup
+
+# SSL Certificates
+nginx/ssl/
+*.pem
+*.key
+*.crt
+*.csr
+
+# PM2
+.pm2/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

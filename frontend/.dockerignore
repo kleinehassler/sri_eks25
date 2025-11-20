@@ -1,0 +1,49 @@
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output (se genera en el Dockerfile)
+dist/
+
+# Archivos de entorno
+.env
+.env.*
+!.env.example
+
+# Archivos de desarrollo
+.git/
+.gitignore
+.eslintrc*
+.prettierrc*
+vite.config.js.timestamp-*
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Documentación
+README.md
+docs/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Coverage
+coverage/
+
+# Archivos de test
+*.test.js
+*.spec.js
+__tests__/
+cypress/
+e2e/
+
+# Archivos de configuración específicos
+server.js

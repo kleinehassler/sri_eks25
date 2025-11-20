@@ -1,0 +1,54 @@
+# Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de entorno
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+
+# Archivos temporales
+uploads/temp/*
+storage/temp/*
+!uploads/temp/.gitkeep
+!storage/temp/.gitkeep
+
+# Archivos de desarrollo
+.git/
+.gitignore
+.eslintrc*
+.prettierrc*
+jest.config.js
+*.test.js
+*.spec.js
+__tests__/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Documentación
+README.md
+CHANGELOG.md
+docs/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Archivos de configuración de Windows
+*.bat
